@@ -1,0 +1,8 @@
+.vs/
+FastMath/bin/
+FastMath/obj/
+FastMathSampleApp/obj/
+FastMathSampleApp/bin/
+packages/
+PerformanceBenchmark/bin/
+PerformanceBenchmark/obj/
