@@ -28,7 +28,6 @@ namespace FastMath
             MinArgument = minArgument;
             MaxArgument = maxArgument;
             Step = (MaxArgument - MinArgument) / valuesCount;
-            MaxArgument += Step;
             Values = this.ProduceValuesArray();
             _argumentMultiplier = 1 / Step;
         }
