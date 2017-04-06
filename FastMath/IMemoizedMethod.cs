@@ -8,10 +8,8 @@ namespace FastMath
         float MaxArgument { get; }
         float Step { get; }
         float[] Values { get; }
-        float Calculate(float argument);
-
         bool IsLinearInterpolationEnabled { get; }
-
         Func<float, float> BaseMethod { get; }
+        float Calculate(float argument);
     }
 }

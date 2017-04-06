@@ -7,7 +7,7 @@ namespace FastMathSampleApp
     {
         static void Main(string[] args)
         {
-            var method = MemoizedAtan.ConstructByStep(0.1f);
+            var method = MemoizedInterpolatedAtan.ConstructByMaxError(0.01f);
 
             Console.WriteLine($"Values count: {method.Values.Length}");
             Console.WriteLine($"Mean error: {method.MeanError()}");

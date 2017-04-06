@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace FastMath
 {
-    public sealed class MemoizedCos : IMemoizedMethod
+    public sealed class MemoizedCos : IUnboundMethod
     {
         public float MinArgument { get; }
 
@@ -49,6 +49,13 @@ namespace FastMath
         {
             var index = (int)(argument * _argumentMultiplier);
             return Values[index];
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public float CalculateUnbound(float argument)
+        {
+            var index = (int)(argument * _argumentMultiplier);
+            return Values[index % Values.Length];
         }
     }
 }

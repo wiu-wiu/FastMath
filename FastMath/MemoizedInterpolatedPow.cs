@@ -90,7 +90,6 @@ namespace FastMath
             return (int)Round((maxArgument - minArgument) / step);
         }
 
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float Calculate(float argument)
         {

@@ -24,6 +24,10 @@ namespace PerformanceBenchmarks
 
         private MemoizedPow _memPow;
 
+        private MemoizedInterpolatedAtan _memInterpolatedAtan;
+
+        private MemoizedAtan _memAtan;
+
         [Setup]
         public void Setup()
         {
@@ -36,6 +40,8 @@ namespace PerformanceBenchmarks
             _memCos = new MemoizedCos(10000);
             _memSqrt = new MemoizedSqrt(0, (float) (Math.PI * 2), 10000);
             _memPow = new MemoizedPow(0, (float) (Math.PI * 2), 2.5f, 1000);
+            _memInterpolatedAtan = MemoizedInterpolatedAtan.ConstructByMaxError(0.01f);
+            _memAtan = MemoizedAtan.ConstructByMaxError(0.01f);
         }
 
         private void Increment()
@@ -45,11 +51,46 @@ namespace PerformanceBenchmarks
                 _index = 0;
         }
 
-        //[Benchmark(Description = "Sin")]
+        [Benchmark(Description = "Sin")]
         public double Sin()
         {
             Increment();
             return Math.Sin(_doubleArray[_index]);
+        }
+
+        [Benchmark(Description = "Atan")]
+        public double Atan()
+        {
+            Increment();
+            return Math.Atan(_doubleArray[_index]);
+        }
+
+        [Benchmark(Description = "MemoizedAtan")]
+        public float MemAtan()
+        {
+            Increment();
+            return _memAtan.Calculate(_array[_index]);
+        }
+
+        [Benchmark(Description = "MemoizedUnboundAtan")]
+        public float MemUnboundAtan()
+        {
+            Increment();
+            return _memAtan.CalculateUnbound(_array[_index]);
+        }
+
+        [Benchmark(Description = "MemoizedInterpolatedAtan")]
+        public float MemInterpolatedAtan()
+        {
+            Increment();
+            return _memInterpolatedAtan.Calculate(_array[_index]);
+        }
+
+        [Benchmark(Description = "MemoizedInterpolatedUnboundAtan")]
+        public float MemInterpolatedUnboundAtan()
+        {
+            Increment();
+            return _memInterpolatedAtan.CalculateUnbound(_array[_index]);
         }
 
         [Benchmark(Description = "MemoizedSin")]
@@ -65,7 +106,7 @@ namespace PerformanceBenchmarks
             Increment();
             return _memCos.Calculate(_array[_index]);
         }
-        /*
+        
         [Benchmark(Description = "Sqrt")]
         public double Sqrt()
         {
@@ -92,6 +133,6 @@ namespace PerformanceBenchmarks
         {
             Increment();
             return _memPow.Calculate(_array[_index]);
-        }*/
+        }
     }
 }
