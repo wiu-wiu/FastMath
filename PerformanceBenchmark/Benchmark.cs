@@ -15,7 +15,11 @@ namespace PerformanceBenchmarks
 
         private float[] _array;
 
+        private float[,] _array2;
+
         private double[] _doubleArray;
+
+        private double[,] _doubleArray2;
 
         private MemoizedSin _memSin;
 
@@ -29,6 +33,8 @@ namespace PerformanceBenchmarks
 
         private MemoizedAtan _memAtan;
 
+        private MemoizedAtan2 _memAtan2;
+
         [Setup]
         public void Setup()
         {
@@ -36,13 +42,27 @@ namespace PerformanceBenchmarks
             var rnd = new Random(DateTime.Now.Millisecond);
 
             _array = Enumerable.Range(0, ArrayLength).Select(e => (float) (rnd.NextDouble() * Math.PI * 2)).ToArray();
-            _doubleArray = Enumerable.Range(0, ArrayLength).Select(e => (rnd.NextDouble() * Math.PI * 2)).ToArray();
+            _doubleArray = Enumerable.Range(0, ArrayLength).Select(e => rnd.NextDouble() * Math.PI * 2).ToArray();
+
+            _array2 = new float[ArrayLength, 2];
+            _doubleArray2 = new double[ArrayLength, 2];
+
+            for (var i = 0; i < ArrayLength; ++i)
+            {
+                _array2[i, 0] = (float) (rnd.NextDouble() * Math.PI * 2 - Math.PI);
+                _array2[i, 1] = (float) (rnd.NextDouble() * Math.PI * 2 - Math.PI);
+
+                _doubleArray2[i, 0] = rnd.NextDouble() * Math.PI * 2 - Math.PI;
+                _doubleArray2[i, 1] = rnd.NextDouble() * Math.PI * 2 - Math.PI;
+            }
+
             _memSin = new MemoizedSin(10000);
             _memCos = new MemoizedCos(10000);
             _memSqrt = new MemoizedSqrt(0, (float) (Math.PI * 2), 10000);
             _memPow = new MemoizedPow(0, (float) (Math.PI * 2), 2.5f, 1000);
             _memInterpolatedAtan = MemoizedInterpolatedAtan.ConstructByMaxError(0.01f);
             _memAtan = MemoizedAtan.ConstructByMaxError(0.01f);
+            _memAtan2 = MemoizedAtan2.ConstructByMaxError(0.01f);
         }
 
         private void Increment()
@@ -52,13 +72,13 @@ namespace PerformanceBenchmarks
                 _index = 0;
         }
 
-        [Benchmark(Description = "Sin")]
+        /*[Benchmark(Description = "Sin")]
         public double Sin()
         {
             Increment();
             return Math.Sin(_doubleArray[_index]);
         }
-        
+        */
         [Benchmark(Description = "Atan")]
         public double Atan()
         {
@@ -73,6 +93,20 @@ namespace PerformanceBenchmarks
             return _memAtan.Calculate(_array[_index]);
         }
 
+        [Benchmark(Description = "Atan2")]
+        public double Atan2()
+        {
+            Increment();
+            return Math.Atan2(_doubleArray2[_index, 0], _doubleArray2[_index, 1]);
+        }
+
+        [Benchmark(Description = "MemoizedAtan2")]
+        public float MemAtan2()
+        {
+            Increment();
+            return _memAtan2.Calculate(_array2[_index, 0], _array2[_index, 1]);
+        }
+        /*
         [Benchmark(Description = "MemoizedUnboundAtan")]
         public float MemUnboundAtan()
         {
@@ -134,6 +168,6 @@ namespace PerformanceBenchmarks
         {
             Increment();
             return _memPow.Calculate(_array[_index]);
-        }
+        }*/
     }
 }
