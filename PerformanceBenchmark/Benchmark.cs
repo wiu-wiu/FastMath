@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Runtime.InteropServices;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Attributes.Jobs;
 using FastMath;
@@ -11,6 +10,8 @@ namespace PerformanceBenchmarks
     public class Benchmark
     {
         private int _index;
+
+        private const int ArrayLength = 1000;
 
         private float[] _array;
 
@@ -34,8 +35,8 @@ namespace PerformanceBenchmarks
             _index = 1;
             var rnd = new Random(DateTime.Now.Millisecond);
 
-            _array = Enumerable.Range(0, 100).Select(e => (float) (rnd.NextDouble() * Math.PI * 2)).ToArray();
-            _doubleArray = Enumerable.Range(0, 100).Select(e => (rnd.NextDouble() * Math.PI * 2)).ToArray();
+            _array = Enumerable.Range(0, ArrayLength).Select(e => (float) (rnd.NextDouble() * Math.PI * 2)).ToArray();
+            _doubleArray = Enumerable.Range(0, ArrayLength).Select(e => (rnd.NextDouble() * Math.PI * 2)).ToArray();
             _memSin = new MemoizedSin(10000);
             _memCos = new MemoizedCos(10000);
             _memSqrt = new MemoizedSqrt(0, (float) (Math.PI * 2), 10000);
@@ -47,7 +48,7 @@ namespace PerformanceBenchmarks
         private void Increment()
         {
             ++_index;
-            if (_index > 99)
+            if (_index > ArrayLength - 1)
                 _index = 0;
         }
 
@@ -57,7 +58,7 @@ namespace PerformanceBenchmarks
             Increment();
             return Math.Sin(_doubleArray[_index]);
         }
-
+        
         [Benchmark(Description = "Atan")]
         public double Atan()
         {
@@ -92,14 +93,14 @@ namespace PerformanceBenchmarks
             Increment();
             return _memInterpolatedAtan.CalculateUnbound(_array[_index]);
         }
-
+        
         [Benchmark(Description = "MemoizedSin")]
         public float MemSin()
         {
             Increment();    
             return _memSin.Calculate(_array[_index]);
         }
-
+        
         [Benchmark(Description = "MemoizedCos")]
         public float MemCos()
         {
