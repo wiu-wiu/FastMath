@@ -72,13 +72,13 @@ namespace PerformanceBenchmarks
                 _index = 0;
         }
 
-        /*[Benchmark(Description = "Sin")]
+        [Benchmark(Description = "Sin")]
         public double Sin()
         {
             Increment();
             return Math.Sin(_doubleArray[_index]);
         }
-        */
+        
         [Benchmark(Description = "Atan")]
         public double Atan()
         {
@@ -106,7 +106,7 @@ namespace PerformanceBenchmarks
             Increment();
             return _memAtan2.Calculate(_array2[_index, 0], _array2[_index, 1]);
         }
-        /*
+        
         [Benchmark(Description = "MemoizedUnboundAtan")]
         public float MemUnboundAtan()
         {
@@ -168,6 +168,6 @@ namespace PerformanceBenchmarks
         {
             Increment();
             return _memPow.Calculate(_array[_index]);
-        }*/
+        }
     }
 }

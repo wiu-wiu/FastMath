@@ -28,6 +28,16 @@ namespace FastMath
                 : SimpleMaxError(method);
         }
 
+        public static float Error(this IMemoizedMethod method, float argument)
+        {
+            return Math.Abs(method.Calculate(argument) - method.BaseMethod(argument));
+        }
+
+        public static float Error(this IUnboundMethod method, float argument)
+        {
+            return Math.Abs(method.CalculateUnbound(argument) - method.BaseMethod(argument));
+        }
+
         private static float SimpleMaxError(IMemoizedMethod method)
         {
             var maxError = 0f;
