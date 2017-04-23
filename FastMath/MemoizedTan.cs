@@ -49,8 +49,14 @@ namespace FastMath
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float CalculateUnbound(float argument)
         {
+            var multiplier = 1;
+            if (argument < 0)
+            {
+                argument = -argument;
+                multiplier = -1;
+            }
             var index = (int)((argument - MinArgument) * _argumentMultiplier);
-            return Values[index % _valuesCycleLength];
+            return multiplier * Values[index % _valuesCycleLength];
         }
     }
 }

@@ -15,6 +15,8 @@ namespace PerformanceBenchmarks
 
         private float[] _array;
 
+        private float[] _unboundArray;
+
         private float[,] _array2;
 
         private double[] _doubleArray;
@@ -42,6 +44,7 @@ namespace PerformanceBenchmarks
             var rnd = new Random(DateTime.Now.Millisecond);
 
             _array = Enumerable.Range(0, ArrayLength).Select(e => (float) (rnd.NextDouble() * Math.PI * 2)).ToArray();
+            _unboundArray = Enumerable.Range(0, ArrayLength).Select(e => (float)(rnd.NextDouble() * Math.PI * 100 - Math.PI * 50)).ToArray();
             _doubleArray = Enumerable.Range(0, ArrayLength).Select(e => rnd.NextDouble() * Math.PI * 2).ToArray();
 
             _array2 = new float[ArrayLength, 2];
@@ -77,6 +80,20 @@ namespace PerformanceBenchmarks
         {
             Increment();
             return Math.Sin(_doubleArray[_index]);
+        }
+
+        [Benchmark(Description = "MemoizedSin")]
+        public float MemSin()
+        {
+            Increment();
+            return _memSin.Calculate(_array[_index]);
+        }
+
+        [Benchmark(Description = "MemoizedSinUnbounded")]
+        public double SinUnbounded()
+        {
+            Increment();
+            return _memSin.CalculateUnbound(_unboundArray[_index]);
         }
         
         [Benchmark(Description = "Atan")]
@@ -126,13 +143,6 @@ namespace PerformanceBenchmarks
         {
             Increment();
             return _memInterpolatedAtan.CalculateUnbound(_array[_index]);
-        }
-        
-        [Benchmark(Description = "MemoizedSin")]
-        public float MemSin()
-        {
-            Increment();    
-            return _memSin.Calculate(_array[_index]);
         }
         
         [Benchmark(Description = "MemoizedCos")]

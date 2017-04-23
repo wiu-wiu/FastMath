@@ -21,6 +21,8 @@ namespace FastMath
 
         private readonly int _valuesCycleLength;
 
+        private const float Period = (float) Math.PI * 2;
+
         public MemoizedSin(int valuesCount)
         {
             MinArgument = 0;
@@ -57,8 +59,14 @@ namespace FastMath
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float CalculateUnbound(float argument)
         {
+            var multiplier = 1;
+            if (argument < 0)
+            {
+                argument = -argument;
+                multiplier = -1;
+            }
             var index = (int)(argument * _argumentMultiplier);
-            return Values[index % _valuesCycleLength];
+            return multiplier * Values[index % _valuesCycleLength];
         }
     }
 }
