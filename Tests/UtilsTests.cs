@@ -6,15 +6,10 @@ namespace Tests
     [TestFixture]
     public class UtilsTests
     {
-        private static IMemoizedMethod CreateLinearMethod()
-        {
-            return new MemoizedMethod(x => x, minArgument: -100, maxArgument: 900, valuesCount: 1000);
-        }
-
         [Test]
         public void TestError()
         {
-            var method = CreateLinearMethod();
+            var method = new MemoizedMethod(x => x, minArgument: -100, maxArgument: 900, valuesCount: 1000);
 
             Assert.AreEqual(method.Error(0), 0, 1e-5);
             Assert.AreEqual(method.Error(100), 0, 1e-5);
