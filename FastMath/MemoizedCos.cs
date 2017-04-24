@@ -19,6 +19,8 @@ namespace FastMath
 
         private readonly float _argumentMultiplier;
 
+        private readonly int _valuesCycleLength;
+
         public MemoizedCos(int valuesCount)
         {
             MinArgument = 0;
@@ -26,6 +28,7 @@ namespace FastMath
             Step = MaxArgument / valuesCount;
             Values = this.ProduceValuesArray();
             _argumentMultiplier = 1 / Step;
+            _valuesCycleLength = Values.Length - 1;
         }
 
         public static MemoizedCos ConstructByMaxError(float maxError)
@@ -41,7 +44,7 @@ namespace FastMath
 
         private static int GetValuesCountByMaxError(float maxError)
         {
-            return (int)Math.Round(2 * Math.PI / maxError + 1);
+            return (int)Math.Round(3 * Math.PI / maxError + 1);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -59,7 +62,7 @@ namespace FastMath
                 argument = -argument;
             }
             var index = (int)(argument * _argumentMultiplier);
-            return Values[index % Values.Length];
+            return Values[index % _valuesCycleLength];
         }
     }
 }

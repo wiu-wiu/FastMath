@@ -21,8 +21,6 @@ namespace FastMath
 
         private readonly int _valuesCycleLength;
 
-        private const float Period = (float) Math.PI * 2;
-
         public MemoizedSin(int valuesCount)
         {
             MinArgument = 0;
@@ -46,7 +44,7 @@ namespace FastMath
 
         private static int GetValuesCountByMaxError(float maxError)
         {
-            return (int) Math.Round(2 * Math.PI / maxError + 1);
+            return (int) Math.Round(3 * Math.PI / maxError + 1);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
