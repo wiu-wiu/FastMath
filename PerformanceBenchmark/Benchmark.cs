@@ -4,7 +4,7 @@ using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Attributes.Jobs;
 using FastMath;
 
-namespace PerformanceBenchmarks
+namespace PerformanceBenchmark
 {
     [LegacyJitX86Job, RyuJitX64Job]
     public class Benchmark

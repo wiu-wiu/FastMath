@@ -9,22 +9,19 @@ namespace FastMath
 
         public float MaxArgument { get; }
 
-        public bool IsLinearInterpolationEnabled => true;
+        public bool IsLinearInterpolationEnabled => false;
 
         public float Step { get; }
 
         public float[] Values { get; }
 
-        public float Power { get; }
-
         public Func<float, float> BaseMethod { get; }
 
         private readonly float _argumentMultiplier;
 
-        public MemoizedMethod(Func<float, float> baseMethod, float minArgument, float maxArgument, float power, int valuesCount)
+        public MemoizedMethod(Func<float, float> baseMethod, float minArgument, float maxArgument, int valuesCount)
         {
             BaseMethod = baseMethod;
-            Power = power;
             MinArgument = minArgument;
             MaxArgument = maxArgument;
             Step = (MaxArgument - MinArgument) / valuesCount;

@@ -1,4 +1,5 @@
 ﻿using BenchmarkDotNet.Running;
+using Benchmark = PerformanceBenchmark.Benchmark;
 
 namespace PerformanceBenchmarks
 {

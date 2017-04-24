@@ -15,16 +15,13 @@ namespace FastMath
 
         public float[] Values { get; }
 
-        public float Power { get; }
-
         public Func<float, float> BaseMethod { get; }
 
         private readonly float _argumentMultiplier;
 
-        public MemoizedInterpolatedMethod(Func<float, float> baseMethod, float minArgument, float maxArgument, float power, int valuesCount)
+        public MemoizedInterpolatedMethod(Func<float, float> baseMethod, float minArgument, float maxArgument, int valuesCount)
         {
             BaseMethod = baseMethod;
-            Power = power;
             MinArgument = minArgument;
             MaxArgument = maxArgument;
             Step = (MaxArgument - MinArgument) / valuesCount;

@@ -6,3 +6,5 @@ FastMathSampleApp/bin/
 packages/
 PerformanceBenchmark/bin/
 PerformanceBenchmark/obj/
+Tests/bin/
+Tests/obj/

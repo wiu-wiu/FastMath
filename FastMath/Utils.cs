@@ -55,17 +55,13 @@ namespace FastMath
         private static float InterpolatedMaxError(IMemoizedMethod method)
         {
             var maxError = 0f;
-            var i = 0;
-            var maxI = 0;
-            for (var argument = method.MinArgument + method.Step * 0.5f;
-                argument < method.MaxArgument;
-                argument += method.Step, ++i)
+            for (var i = 0; i < method.Values.Length - 1; ++i)
             {
+                var argument = method.MinArgument + method.Step * 0.5f + i * method.Step;
                 var difference = Math.Abs(method.Calculate(argument) - method.BaseMethod(argument));
                 if (difference > maxError)
                 {
                     maxError = difference;
-                    maxI = i;
                 }
             }
             return maxError;
@@ -73,11 +69,10 @@ namespace FastMath
 
         public static float MeanError(this IMemoizedMethod method)
         {
-            var step = method.Step;
-            var startArgument = method.MinArgument + step * 0.5f;
             var sumError = 0f;
-            for (var argument = startArgument; argument <= method.MaxArgument; argument += step)
+            for (var i = 0; i < method.Values.Length - 1; ++i)
             {
+                var argument = method.MinArgument + method.Step * 0.5f + i * method.Step;
                 var error = Math.Abs(method.BaseMethod(argument) - method.Calculate(argument));
                 if (!float.IsInfinity(error) && !float.IsNaN(error))
                 {
