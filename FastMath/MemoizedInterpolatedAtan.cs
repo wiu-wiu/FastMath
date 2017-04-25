@@ -25,20 +25,29 @@ namespace FastMath
 
         private const float MaxValue = (float) Math.PI / 2;
 
+        private const int AdditionalValueCount = 2;
+
         public MemoizedInterpolatedAtan(int valuesCount, float maxArgument)
         {
             MinArgument = -maxArgument;
             MaxArgument = maxArgument;
-            Step = MaxArgument / valuesCount;
-            Values = this.ProduceValuesArray();
+            Values = new float[valuesCount];
+            Step = 2 * MaxArgument / (valuesCount - AdditionalValueCount);
+            this.ProduceValuesArray(AdditionalValueCount);
             _argumentMultiplier = 1 / Step;
         }
 
         public static MemoizedInterpolatedAtan ConstructByMaxError(float maxError)
         {
+            if (maxError < 1e-3)
+            {
+                throw new ArgumentException("Max error is to small. 1e-3 is the best supported quality");
+            }
+
+            maxError *= 0.95f;
             var maxArgument = (float) Math.Tan(Math.PI / 2 - maxError);
             var step = (float) Math.Sqrt(8 * maxError / Max2DerivativeValue);
-            var valuesCount = (int) (maxArgument / step + 1);
+            var valuesCount = (int) (2 * maxArgument / step + AdditionalValueCount + 1);
             return new MemoizedInterpolatedAtan(valuesCount, maxArgument);
         }
 
@@ -53,7 +62,17 @@ namespace FastMath
             var floatIndex = (argument - MinArgument) * _argumentMultiplier;
             var index = (int) floatIndex;
             var alpha = floatIndex - index;
-            return alpha * Values[index] + (1 - alpha) * Values[index + 1];
+            try
+            {
+                return (1 - alpha) * Values[index] + alpha * Values[index + 1];
+            }
+            catch (Exception e)
+            {
+
+                return 0;
+                throw;
+            }
+            
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -66,7 +85,7 @@ namespace FastMath
             var floatIndex = (argument - MinArgument) * _argumentMultiplier;
             var index = (int) floatIndex;
             var alpha = floatIndex - index;
-            return alpha * Values[index] + (1 - alpha) * Values[index + 1];
+            return (1 - alpha) * Values[index] + alpha * Values[index + 1];
         }
     }
 }

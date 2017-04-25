@@ -23,7 +23,7 @@ namespace Tests
 
             var interval = method.MaxArgument - method.MinArgument;
             var from = method.MinArgument - interval * 100;
-            var to = method.MinArgument + interval * 100;
+            var to = method.MaxArgument + interval * 100;
             var step = interval / 10;
             var argument = from;
 
@@ -67,6 +67,18 @@ namespace Tests
             foreach (var error in maxErrors)
             {
                 var method = MemoizedAtan.ConstructByMaxError(error);
+                TestUnboundMethod(method, error);
+            }
+        }
+
+        [Test]
+        public void TestInterpolatedAtan()
+        {
+            var maxErrors = new[] {1, 1e-1f, 1e-2f, 1e-3f};
+
+            foreach (var error in maxErrors)
+            {
+                var method = MemoizedInterpolatedAtan.ConstructByMaxError(error);
                 TestUnboundMethod(method, error);
             }
         }

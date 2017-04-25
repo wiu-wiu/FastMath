@@ -9,7 +9,7 @@ namespace Tests
         [Test]
         public void TestError()
         {
-            var method = new MemoizedMethod(x => x, minArgument: -100, maxArgument: 900, valuesCount: 1000);
+            var method = new MemoizedMethod(x => x, minArgument: -100, maxArgument: 900, valuesCount: 1001);
 
             Assert.AreEqual(method.Error(0), 0, 1e-5);
             Assert.AreEqual(method.Error(100), 0, 1e-5);
@@ -25,7 +25,7 @@ namespace Tests
         [Test]
         public void TestMaxError()
         {
-            var valuesCounts = new[] {1, 10, 100, 1000, 10000};
+            var valuesCounts = new[] {3, 10, 100, 1000, 10000};
 
             foreach (var valuesCount in valuesCounts)
             {
@@ -43,7 +43,7 @@ namespace Tests
         [Test]
         public void TestMeanError()
         {
-            var valuesCounts = new[] {1, 10, 100, 1000, 10000};
+            var valuesCounts = new[] {3, 10, 100, 1000, 10000};
 
             foreach (var valuesCount in valuesCounts)
             {

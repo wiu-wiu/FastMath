@@ -27,8 +27,9 @@ namespace FastMath
         {
             MinArgument = -maxArgument;
             MaxArgument = maxArgument;
-            Step = MaxArgument / valuesCount;
-            Values = this.ProduceValuesArray();
+            Values = new float[valuesCount];
+            Step = (MaxArgument - MinArgument) / (valuesCount - 1);
+            this.ProduceValuesArray();
             _argumentMultiplier = 1 / Step;
         }
 
@@ -36,11 +37,11 @@ namespace FastMath
         {
             if (maxError < 1e-3)
             {
-                throw new ArgumentException("Max error is to small. Try to use interpolated atan.");
+                throw new ArgumentException("Max error is to small. 1e-3 is the best supported quality");
             }
             maxError *= 0.95f;
             var maxArgument = (float)Math.Tan(Math.PI / 2 - maxError);
-            var valuesCount = (int) (maxArgument / maxError + 1);
+            var valuesCount = (int) (2.5f * maxArgument / maxError + 2);
             return new MemoizedAtan(valuesCount, maxArgument);
         }
 

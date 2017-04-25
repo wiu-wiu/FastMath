@@ -5,32 +5,28 @@ namespace FastMath
 {
     public static class Utils
     {
-        internal static float[] ProduceValuesArray(this IMemoizedMethod memoizedMethod)
+        internal static void ProduceValuesArray(this IMemoizedMethod memoizedMethod, int additionalValues = 1)
         {
-            var minArgument = memoizedMethod.MinArgument;
-            var maxArgument = memoizedMethod.MaxArgument;
-            var step = memoizedMethod.Step;
+            var minArgument = (double) memoizedMethod.MinArgument;
+            var maxArgument = (double) memoizedMethod.MaxArgument;
+            var step = (maxArgument - minArgument) / (memoizedMethod.Values.Length - additionalValues);
 
-            var valuesCount = (int) Math.Round((maxArgument - minArgument) / step) + 1;
-            var values = new float[valuesCount];
-
-            if (valuesCount < 10 * 1024 * 1024)
+            if (memoizedMethod.Values.Length < 10 * 1024 * 1024)
             {
-                for (var i = 0; i < values.Length; ++i)
+                for (var i = 0; i < memoizedMethod.Values.Length; ++i)
                 {
                     var argument = i * step + minArgument;
-                    values[i] = memoizedMethod.BaseMethod(argument);
+                    memoizedMethod.Values[i] = memoizedMethod.BaseMethod((float) argument);
                 }
             }
             else
             {
-                Parallel.For(0, values.Length, i =>
+                Parallel.For(0, memoizedMethod.Values.Length, i =>
                 {
                     var argument = i * step + minArgument;
-                    values[i] = memoizedMethod.BaseMethod(argument);
+                    memoizedMethod.Values[i] = memoizedMethod.BaseMethod((float) argument);
                 });
             }
-            return values;
         }
 
         public static float MaxError(this IMemoizedMethod method)
@@ -70,6 +66,10 @@ namespace FastMath
             for (var i = 0; i < method.Values.Length - 1; ++i)
             {
                 var argument = method.MinArgument + method.Step * 0.5f + i * method.Step;
+                if (argument > method.MaxArgument)
+                {
+                    break;
+                }
                 var difference = Math.Abs(method.Calculate(argument) - method.BaseMethod(argument));
                 if (difference > maxError)
                 {
@@ -85,6 +85,10 @@ namespace FastMath
             for (var i = 0; i < method.Values.Length - 1; ++i)
             {
                 var argument = method.MinArgument + method.Step * 0.5f + i * method.Step;
+                if (argument > method.MaxArgument)
+                {
+                    break;
+                }
                 var error = Math.Abs(method.BaseMethod(argument) - method.Calculate(argument));
                 if (!float.IsInfinity(error) && !float.IsNaN(error))
                 {
