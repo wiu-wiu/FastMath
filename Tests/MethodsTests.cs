@@ -82,5 +82,30 @@ namespace Tests
                 TestUnboundMethod(method, error);
             }
         }
+
+        [Test]
+        public void TestLog()
+        {
+            var maxErrors = new[] {1, 1e-1f, 1e-2f, 1e-3f};
+            var arguments = new[] {1e-2f, 1, 10, 100, 1000};
+            var bases = new[] {0.01f, 0.1f, (float) Math.E, 10};
+
+            for (var i = 0; i < arguments.Length; ++i)
+            {
+                for (var j = i + 1; j < arguments.Length; ++j)
+                {
+                    foreach (var @base in bases)
+                    {
+                        foreach (var error in maxErrors)
+                        {
+                            var method = MemoizedLog.ConstructByMaxError(arguments[i], arguments[j], @base, error);
+                            Assert.IsTrue(method.MaxError() <= error, 
+                                message: $"max error is {error}, but actual error is {method.MaxError()}," +
+                                         $"base is {@base}.");
+                        }
+                    }
+                }
+            }
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using static System.Math;
 
 namespace FastMath
 {
@@ -17,7 +18,7 @@ namespace FastMath
 
         public float[] Values { get; }
 
-        public Func<float, float> BaseMethod => (x => (float) Math.Log(x, Base));
+        public Func<float, float> BaseMethod => (x => (float) Log(x, Base));
 
         private readonly float _argumentMultiplier;
 
@@ -34,8 +35,13 @@ namespace FastMath
 
         public static MemoizedLog ConstructByMaxError(float minArgument, float maxArgument, float @base, float maxError)
         {
-            var step = Math.Pow(@base, maxError + Math.Log(minArgument, @base)) - minArgument;
-            return ConstructByStep(minArgument, maxArgument, @base, (float) step);
+            if (Abs(@base - 1) < 1e-3f)
+            {
+                throw new ArgumentException("Can't create log with base equal to 1");
+            }
+            var step = Abs(Pow(@base, maxError + Log(minArgument, @base)) - minArgument) * 0.95f;
+            var valuesCount = (int)((maxArgument - minArgument) / step) + 2;
+            return new MemoizedLog(minArgument, maxArgument, @base, valuesCount);
         }
 
         public static MemoizedLog ConstructByStep(float minArgument, float maxArgument, float @base, float step)
