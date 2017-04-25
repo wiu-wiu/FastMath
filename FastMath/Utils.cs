@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace FastMath
 {
@@ -13,10 +14,21 @@ namespace FastMath
             var valuesCount = (int) Math.Round((maxArgument - minArgument) / step) + 1;
             var values = new float[valuesCount];
 
-            for (var i = 0; i < values.Length; ++i)
+            if (valuesCount < 10 * 1024 * 1024)
             {
-                var argument = i * step + minArgument;
-                values[i] = memoizedMethod.BaseMethod(argument);
+                for (var i = 0; i < values.Length; ++i)
+                {
+                    var argument = i * step + minArgument;
+                    values[i] = memoizedMethod.BaseMethod(argument);
+                }
+            }
+            else
+            {
+                Parallel.For(0, values.Length, i =>
+                {
+                    var argument = i * step + minArgument;
+                    values[i] = memoizedMethod.BaseMethod(argument);
+                });
             }
             return values;
         }

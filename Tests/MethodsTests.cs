@@ -7,7 +7,7 @@ namespace Tests
     [TestFixture]
     public class MethodsTests
     {
-        private readonly float[] _maxErrors = {0.1f, 1e-2f, 1e-3f, 1e-4f, 1e-5f};
+        private readonly float[] _maxErrors = {1, 1e-1f, 1e-2f, 1e-3f, 1e-4f, 1e-5f};
 
         private static void BasicChecks(IMemoizedMethod method)
         {
@@ -26,15 +26,17 @@ namespace Tests
             var to = method.MinArgument + interval * 100;
             var step = interval / 10;
             var argument = from;
+
             for (var i = 0; argument <= to; ++i)
             {
                 argument = from + step * i;
                 var value = method.CalculateUnbound(argument);
                 Assert.IsTrue(Math.Abs(value - method.BaseMethod(argument)) <= maxError,
-                    message: $"unbound method check failed, maxError is {maxError}, argument is {argument}" +
+                    message: $"unbound method check failed, max error is {maxError}, argument is {argument}" +
                              $", actual error is {Math.Abs(value - method.BaseMethod(argument))}");
             }
-            Assert.IsTrue(method.MaxError() <= maxError);
+            Assert.IsTrue(method.MaxError() <= maxError,
+                message: $"max error is {maxError}, but actual max error is {method.MaxError()}");
         }
 
         [Test]
@@ -54,6 +56,18 @@ namespace Tests
             {
                 var method = MemoizedCos.ConstructByMaxError(error);
                 TestUnboundMethod(method, 5 * error);
+            }
+        }
+
+        [Test]
+        public void TestAtan()
+        {
+            var maxErrors = new[] {1, 1e-1f, 1e-2f, 1e-3f};
+
+            foreach (var error in maxErrors)
+            {
+                var method = MemoizedAtan.ConstructByMaxError(error);
+                TestUnboundMethod(method, error);
             }
         }
     }

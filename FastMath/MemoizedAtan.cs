@@ -34,7 +34,12 @@ namespace FastMath
 
         public static MemoizedAtan ConstructByMaxError(float maxError)
         {
-            var maxArgument = (float) Math.Tan(Math.PI / 2 - maxError);
+            if (maxError < 1e-3)
+            {
+                throw new ArgumentException("Max error is to small. Try to use interpolated atan.");
+            }
+            maxError *= 0.95f;
+            var maxArgument = (float)Math.Tan(Math.PI / 2 - maxError);
             var valuesCount = (int) (maxArgument / maxError + 1);
             return new MemoizedAtan(valuesCount, maxArgument);
         }
