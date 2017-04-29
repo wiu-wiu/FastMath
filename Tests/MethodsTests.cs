@@ -186,5 +186,27 @@ namespace Tests
                 }
             }
         }
+
+        [Test]
+        public void TestSqrt()
+        {
+            var maxErrors = new[] {1, 1e-1f, 1e-2f, 1e-3f};
+            var arguments = new[] {0, 1e-1f, 1, 5, 100};
+
+            for (var i = 0; i < arguments.Length; ++i)
+            {
+                for (var j = i + 1; j < arguments.Length; ++j)
+                {
+                    foreach (var error in maxErrors)
+                    {
+                        var method = MemoizedSqrt.ConstructByMaxError(arguments[i], arguments[j], error);
+                        BasicChecks(method);
+                        Assert.IsTrue(method.MaxError() <= error,
+                            message: $"max error is {error}, but actual error is {method.MaxError()}, " +
+                                     $"interval from {arguments[i]} to {arguments[j]}.");
+                    }
+                }
+            }
+        }
     }
 }

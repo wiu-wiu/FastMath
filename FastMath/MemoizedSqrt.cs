@@ -43,9 +43,12 @@ namespace FastMath
 
         private static int GetValuesCountByMaxError(float minArgument, float maxArgument, float maxError)
         {
-            var a = maxError + Math.Sqrt(minArgument);
-            var step = a * a - minArgument;
-            return (int) Math.Round((maxArgument - minArgument) / step);
+            double CalculateStep(float arg) => arg - Math.Pow(Math.Abs(Math.Sqrt(arg) - maxError), 2);
+
+            var step = Math.Min(CalculateStep(minArgument), CalculateStep(maxArgument));
+            step = Math.Abs(step);
+
+            return (int) Math.Round((maxArgument - minArgument) / step + 1);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
