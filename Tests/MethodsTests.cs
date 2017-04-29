@@ -208,5 +208,33 @@ namespace Tests
                 }
             }
         }
+
+        [Test]
+        public void TestAsin()
+        {
+            var maxErrors = new[] {1, 1e-1f, 1e-2f, 1e-3f};
+
+            foreach (var error in maxErrors)
+            {
+                var method = MemoizedAsin.ConstructByMaxError(error);
+                BasicChecks(method);
+                Assert.IsTrue(method.MaxError() <= error,
+                    message: $"max error is {error}, but actual error is {method.MaxError()}");
+            }
+        }
+
+        [Test]
+        public void TestAcos()
+        {
+            var maxErrors = new[] {1, 1e-1f, 1e-2f, 1e-3f};
+
+            foreach (var error in maxErrors)
+            {
+                var method = MemoizedAcos.ConstructByMaxError(error);
+                BasicChecks(method);
+                Assert.IsTrue(method.MaxError() <= error,
+                    message: $"max error is {error}, but actual error is {method.MaxError()}");
+            }
+        }
     }
 }
