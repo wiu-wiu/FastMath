@@ -107,5 +107,47 @@ namespace Tests
                 }
             }
         }
+
+        [Test]
+        public void TestPow()
+        {
+            var maxErrors = new[] {1, 1e-1f, 1e-2f, 1e-3f};
+            var arguments = new[] {-20, 1e-1f, 1, 5, 20};
+            var powers = new[] {-2, -1, 0.1f, 2, (float) Math.E};
+
+            for (var i = 0; i < arguments.Length; ++i)
+            {
+                for (var j = i + 1; j < arguments.Length; ++j)
+                {
+                    foreach (var power in powers)
+                    {
+                        foreach (var error in maxErrors)
+                        {
+                            if (power < 1 && arguments[i] < 0)
+                            {
+                                continue;
+                            }
+
+                            if (Math.Abs(power - (int) power) > 1e-5 && arguments[i] < 0)
+                            {
+                                continue;
+                            }
+                            try
+                            {
+                                var method = MemoizedPow.ConstructByMaxError(arguments[i], arguments[j], power, error);
+                                Assert.IsTrue(method.MaxError() <= error,
+                                    message: $"max error is {error}, but actual error is {method.MaxError()}," +
+                                             $"power is {power}, interval from {arguments[i]} to {arguments[j]}.");
+                            }
+                            catch (Exception e)
+                            {
+                                throw;
+                            }
+                            
+                        }
+                    }
+                }
+            }
+        }
     }
 }

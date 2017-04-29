@@ -49,8 +49,6 @@ namespace FastMath
 
         private static int GetValuesCountByMaxError(float minArgument, float maxArgument, float power, float maxError)
         {
-            float CalculateStep(float argument) => (float) Abs(argument - Pow(Pow(argument, power) - maxError, 1 / power));
-
             if (power < 0)
             {
                 if ((minArgument < 0 && 0 < maxArgument)
@@ -65,20 +63,12 @@ namespace FastMath
             if (power > 1)
             {
                 var arg = Max(Abs(minArgument), Abs(maxArgument));
-                step = CalculateStep(arg);
+                step = (float) Abs(Abs(Pow(Pow(arg, power) + maxError, 1 / power)) - arg) * 0.9f;
             }
             else
             {
-                var arg = 0f;
-                if (maxArgument < 0)
-                {
-                    arg = maxArgument;
-                }
-                else if (minArgument > 0)
-                {
-                    arg = minArgument;
-                }
-                step = CalculateStep(arg);
+                var arg = Min(Abs(minArgument), Abs(maxArgument));
+                step = (float) Abs(Pow(Abs(Pow(arg, power) - maxError), 1 / power) - arg) * 0.8f;
             }
             return (int) Round((maxArgument - minArgument) / step);
         }
