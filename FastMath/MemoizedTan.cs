@@ -36,7 +36,7 @@ namespace FastMath
 
         public static MemoizedTan ConstructByStep(float step)
         {
-            var valuesCount = (int)(Math.PI * 2 / step);
+            var valuesCount = (int)(Math.PI / step);
             return new MemoizedTan(valuesCount);
         }
 

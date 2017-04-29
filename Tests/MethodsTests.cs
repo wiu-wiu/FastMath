@@ -60,6 +60,24 @@ namespace Tests
         }
 
         [Test]
+        public void TestTan()
+        {
+            var methodStep = 1e-5f;
+            var method = MemoizedTan.ConstructByStep(methodStep);
+            Assert.AreEqual(methodStep, method.Step, 1e-6);
+
+
+            var minArgument = method.MinArgument + 0.1f;
+            var maxArgument = method.MaxArgument - 0.1f;
+            var step = method.Step / 2;
+
+            for (var argument = minArgument; argument <= maxArgument; argument += step)
+            {
+                Assert.IsTrue(method.Error(argument) < 1e-3f);
+            }
+        }
+
+        [Test]
         public void TestAtan()
         {
             var maxErrors = new[] {1, 1e-1f, 1e-2f, 1e-3f};
@@ -99,6 +117,7 @@ namespace Tests
                         foreach (var error in maxErrors)
                         {
                             var method = MemoizedLog.ConstructByMaxError(arguments[i], arguments[j], @base, error);
+                            BasicChecks(method);
                             Assert.IsTrue(method.MaxError() <= error, 
                                 message: $"max error is {error}, but actual error is {method.MaxError()}," +
                                          $"base is {@base}.");
@@ -132,6 +151,7 @@ namespace Tests
                                 continue;
                             }
                             var method = MemoizedPow.ConstructByMaxError(arguments[i], arguments[j], power, error);
+                            BasicChecks(method);
                             Assert.IsTrue(method.MaxError() <= error,
                                 message: $"max error is {error}, but actual error is {method.MaxError()}," +
                                          $"power is {power}, interval from {arguments[i]} to {arguments[j]}.");
@@ -157,6 +177,7 @@ namespace Tests
                         foreach (var error in maxErrors)
                         {
                             var method = MemoizedExp.ConstructByMaxError(arguments[i], arguments[j], @base, error);
+                            BasicChecks(method);
                             Assert.IsTrue(method.MaxError() <= error,
                                 message: $"max error is {error}, but actual error is {method.MaxError()}," +
                                          $"base is {@base}, interval from {arguments[i]} to {arguments[j]}.");
