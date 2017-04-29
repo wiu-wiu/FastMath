@@ -43,13 +43,13 @@ namespace FastMath
 
         public static MemoizedExp ConstructByStep(float minArgument, float maxArgument, float @base, float step)
         {
-            var valuesCount = (int)(PI * 2 / step);
+            var valuesCount = (int)((maxArgument - minArgument) / step);
             return new MemoizedExp(minArgument, maxArgument, @base, valuesCount);
         }
 
         private static int GetValuesCountByMaxError(float minArgument, float maxArgument, float @base, float maxError)
         {
-            float CalculateStep(float argument) => (float) Abs(Log(1 - maxError * Pow(@base, -argument), @base));
+            float CalculateStep(float argument) => (float) Abs(Log(maxError + Pow(@base, argument), @base) - argument);
             if (@base < 0)
             {
                 throw new ArgumentException("Can't calculate values count: base is less then zero");
@@ -68,6 +68,7 @@ namespace FastMath
             {
                 step = CalculateStep(maxArgument);
             }
+            step *= 0.9f;
             return (int) Round((maxArgument - minArgument) / step);
         }
 

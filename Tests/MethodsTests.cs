@@ -127,23 +127,39 @@ namespace Tests
                             {
                                 continue;
                             }
-
                             if (Math.Abs(power - (int) power) > 1e-5 && arguments[i] < 0)
                             {
                                 continue;
                             }
-                            try
-                            {
-                                var method = MemoizedPow.ConstructByMaxError(arguments[i], arguments[j], power, error);
-                                Assert.IsTrue(method.MaxError() <= error,
-                                    message: $"max error is {error}, but actual error is {method.MaxError()}," +
-                                             $"power is {power}, interval from {arguments[i]} to {arguments[j]}.");
-                            }
-                            catch (Exception e)
-                            {
-                                throw;
-                            }
-                            
+                            var method = MemoizedPow.ConstructByMaxError(arguments[i], arguments[j], power, error);
+                            Assert.IsTrue(method.MaxError() <= error,
+                                message: $"max error is {error}, but actual error is {method.MaxError()}," +
+                                         $"power is {power}, interval from {arguments[i]} to {arguments[j]}.");
+                        }
+                    }
+                }
+            }
+        }
+
+        [Test]
+        public void TestExp()
+        {
+            var maxErrors = new[] {1, 1e-1f, 1e-2f, 1e-3f};
+            var arguments = new[] {-5, 1e-1f, 1, 5};
+            var bases = new[] {0.5f, 2, (float) Math.E};
+
+            for (var i = 0; i < arguments.Length; ++i)
+            {
+                for (var j = i + 1; j < arguments.Length; ++j)
+                {
+                    foreach (var @base in bases)
+                    {
+                        foreach (var error in maxErrors)
+                        {
+                            var method = MemoizedExp.ConstructByMaxError(arguments[i], arguments[j], @base, error);
+                            Assert.IsTrue(method.MaxError() <= error,
+                                message: $"max error is {error}, but actual error is {method.MaxError()}," +
+                                         $"base is {@base}, interval from {arguments[i]} to {arguments[j]}.");
                         }
                     }
                 }
