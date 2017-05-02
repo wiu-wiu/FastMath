@@ -271,18 +271,11 @@ namespace Tests
                 {
                     foreach (var error in maxErrors)
                     {
-                        try
-                        {
-                            var method = MemoizedSinh.ConstructByMaxError(arguments[i], arguments[j], error);
-                            BasicChecks(method);
-                            Assert.IsTrue(method.MaxError() <= error,
-                                message: $"max error is {error}, but actual error is {method.MaxError()}, " +
-                                         $"interval from {arguments[i]} to {arguments[j]}.");
-                        }
-                        catch (Exception e)
-                        {
-                            throw;
-                        }
+                        var method = MemoizedCosh.ConstructByMaxError(arguments[i], arguments[j], error);
+                        BasicChecks(method);
+                        Assert.IsTrue(method.MaxError() <= error,
+                            message: $"max error is {error}, but actual error is {method.MaxError()}, " +
+                                     $"interval from {arguments[i]} to {arguments[j]}.");
                     }
                 }
             }
@@ -291,8 +284,8 @@ namespace Tests
         [Test]
         public void TestCosh()
         {
-            var maxErrors = new[] { 1, 1e-1f, 1e-2f, 1e-3f };
-            var arguments = new[] { -5, 0, 1e-1f, 1, 5 };
+            var maxErrors = new[] {1, 1e-1f, 1e-2f, 1e-3f};
+            var arguments = new[] {-5, 0, 1e-1f, 1, 5};
 
             for (var i = 0; i < arguments.Length; ++i)
             {
@@ -300,18 +293,11 @@ namespace Tests
                 {
                     foreach (var error in maxErrors)
                     {
-                        try
-                        {
-                            var method = MemoizedCosh.ConstructByMaxError(arguments[i], arguments[j], error);
-                            BasicChecks(method);
-                            Assert.IsTrue(method.MaxError() <= error,
-                                message: $"max error is {error}, but actual error is {method.MaxError()}, " +
-                                         $"interval from {arguments[i]} to {arguments[j]}.");
-                        }
-                        catch (Exception e)
-                        {
-                            throw;
-                        }
+                        var method = MemoizedCosh.ConstructByMaxError(arguments[i], arguments[j], error);
+                        BasicChecks(method);
+                        Assert.IsTrue(method.MaxError() <= error,
+                            message: $"max error is {error}, but actual error is {method.MaxError()}, " +
+                                     $"interval from {arguments[i]} to {arguments[j]}.");
                     }
                 }
             }
