@@ -302,5 +302,45 @@ namespace Tests
                 }
             }
         }
+
+        [Test]
+        public void TestAtan2()
+        {
+            var maxErrors = new[] {1, 1e-1f, 1e-2f, 1e-3f};
+
+            const int minArgument = -20;
+            const int maxArgument = 20;
+            var step = 0.01f;
+            var count = (int) ((maxArgument - minArgument) / step + 1);
+
+            foreach (var error in maxErrors)
+            {
+                var method = MemoizedAtan2.ConstructByMaxError(error);
+                TestMethod(method, error);
+            }
+
+            void TestMethod(MemoizedAtan2 method, float error)
+            {
+                for (var i = 0; i < count; ++i)
+                {
+                    var x = minArgument + i * step;
+                    for (var j = 0; j < count; ++j)
+                    {
+                        var y = minArgument + j * step;
+
+                        if (Math.Abs(x) < 1e-3 && Math.Abs(y) < 1e-3)
+                        {
+                            continue;
+                        }
+                        var result = method.Calculate(y, x);
+                        var realResult = Math.Atan2(y, x);
+                        Assert.IsTrue(Math.Abs(realResult - result) <= error, 
+                            message: $"max error is {error}, but actual error is {Math.Abs(realResult - result)}, " +
+                                     $"arguments are ({x}, {y}).");
+                    }
+                }
+            }
+        }
     }
 }
+

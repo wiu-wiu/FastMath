@@ -44,9 +44,9 @@ namespace FastMath
             }
             else
             {
-                return y > 0 
-                    ? _atan.CalculateUnbound(y / x) + Pi
-                    : _atan.CalculateUnbound(y / x) - Pi;
+                return y < 0 
+                    ? _atan.CalculateUnbound(y / x) - Pi
+                    : _atan.CalculateUnbound(y / x) + Pi;
             }
         }
     }
