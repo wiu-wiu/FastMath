@@ -37,7 +37,7 @@ namespace FastMath
 
         public static MemoizedCosh ConstructByStep(float minArgument, float maxArgument, float step)
         {
-            var valuesCount = (int)(Math.PI * 2 / step);
+            var valuesCount = (int)((maxArgument - minArgument) / step);
             return new MemoizedCosh(minArgument, maxArgument, valuesCount);
         }
 
@@ -45,7 +45,7 @@ namespace FastMath
         {
             var argument = Math.Max(Math.Abs(minArgument), Math.Abs(maxArgument));
             var step = (float)Math.Abs(Math.Log(1 - maxError * Math.Pow(Math.E, -argument), Math.E));
-            return (int)Math.Round((maxArgument - minArgument) / step);
+            return (int)Math.Round((maxArgument - minArgument) / step) + 2;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
