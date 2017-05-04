@@ -37,22 +37,22 @@ namespace FastMath
 
         public static MemoizedInterpolatedPow ConstructByStep(float minArgument, float maxArgument, float power, float step)
         {
-            var valuesCount = (int)((maxArgument - minArgument) / step);
+            var valuesCount = (int)((maxArgument - minArgument) / step) + 2;
             return new MemoizedInterpolatedPow(minArgument, maxArgument, power, valuesCount);
         }
 
         public static MemoizedInterpolatedPow ConstructByMaxError(float minArgument, float maxArgument, float power, float maxError)
         {
-            var valuesCount = GetValuesCountByMaxError(minArgument, maxArgument, power, maxError);
-            return new MemoizedInterpolatedPow(minArgument, maxArgument, power, valuesCount);
+            var step = GetStepByMaxError(minArgument, maxArgument, power, maxError);
+            return ConstructByStep(minArgument, maxArgument, power, step);
         }
 
-        private static int GetValuesCountByMaxError(float minArgument, float maxArgument, float power, float maxError)
+        private static float GetStepByMaxError(float minArgument, float maxArgument, float power, float maxError)
         {
             float CalculateStep(float argument)
             {
                 var methodDerivative2 = (power - 1) * power * Pow(argument, power - 2);
-                return (float) Pow(Abs(8 * maxError / methodDerivative2), 0.5);
+                return (float) Pow(Abs(8 * maxError / methodDerivative2), 0.5) * 0.9f;
             }
 
             if (Abs(power - 1) < MinArgumentValue)
@@ -70,25 +70,17 @@ namespace FastMath
             }
 
             float step;
-            if (power > 2)
+            if (power >= 2)
             {
                 var arg = Max(Abs(minArgument), Abs(maxArgument));
                 step = CalculateStep(arg);
             }
             else
             {
-                var arg = 0f;
-                if (maxArgument < 0)
-                {
-                    arg = maxArgument;
-                }
-                else if (minArgument > 0)
-                {
-                    arg = minArgument;
-                }
+                var arg = Min(Abs(minArgument), Abs(maxArgument));
                 step = CalculateStep(arg);
             }
-            return (int)Round((maxArgument - minArgument) / step);
+            return step;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

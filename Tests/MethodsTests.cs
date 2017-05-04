@@ -14,7 +14,7 @@ namespace Tests
             Assert.IsTrue(method.Values.Length > 0);
             Assert.IsTrue(method.BaseMethod != null);
             Assert.IsTrue(method.MinArgument < method.MaxArgument);
-            Assert.IsTrue(method.Step > 0);
+            Assert.IsTrue(method.Step > 0 && !float.IsNaN(method.Step));
         }
 
         private static void TestUnboundMethod(IUnboundMethod method, float maxError)
@@ -137,6 +137,32 @@ namespace Tests
         }
 
         [Test]
+        public void TestInterpolateLog()
+        {
+            var maxErrors = new[] {1, 1e-1f, 1e-2f, 1e-3f};
+            var arguments = new[] {1e-2f, 1, 10, 100, 1000};
+            var bases = new[] {0.01f, 0.1f, (float) Math.E, 10};
+
+            for (var i = 0; i < arguments.Length; ++i)
+            {
+                for (var j = i + 1; j < arguments.Length; ++j)
+                {
+                    foreach (var @base in bases)
+                    {
+                        foreach (var error in maxErrors)
+                        {
+                            var method = MemoizedInterpolatedLog.ConstructByMaxError(arguments[i], arguments[j], @base, error);
+                            BasicChecks(method);
+                            Assert.IsTrue(method.MaxError() <= error,
+                                message: $"max error is {error}, but actual error is {method.MaxError()}," +
+                                         $"base is {@base}.");
+                        }
+                    }
+                }
+            }
+        }
+
+        [Test]
         public void TestPow()
         {
             var maxErrors = new[] {1, 1e-1f, 1e-2f, 1e-3f};
@@ -164,6 +190,48 @@ namespace Tests
                             Assert.IsTrue(method.MaxError() <= error,
                                 message: $"max error is {error}, but actual error is {method.MaxError()}," +
                                          $"power is {power}, interval from {arguments[i]} to {arguments[j]}.");
+                        }
+                    }
+                }
+            }
+        }
+
+        [Test]
+        public void TestInterpolatedPow()
+        {
+            var maxErrors = new[] {1, 1e-1f, 1e-2f, 1e-3f};
+            var arguments = new[] {-20, 1e-1f, 1, 5, 20};
+            var powers = new[] {-2, -1, 0.1f, 2, (float) Math.E};
+
+            for (var i = 0; i < arguments.Length; ++i)
+            {
+                for (var j = i + 1; j < arguments.Length; ++j)
+                {
+                    foreach (var power in powers)
+                    {
+                        foreach (var error in maxErrors)
+                        {
+                            if (power < 1 && arguments[i] < 0)
+                            {
+                                continue;
+                            }
+                            if (Math.Abs(power - (int)power) > 1e-5 && arguments[i] < 0)
+                            {
+                                continue;
+                            }
+                            try
+                            {
+                                var method = MemoizedInterpolatedPow.ConstructByMaxError(arguments[i], arguments[j], power, error);
+                                BasicChecks(method);
+                                Assert.IsTrue(method.MaxError() <= error,
+                                    message: $"max error is {error}, but actual error is {method.MaxError()}," +
+                                             $"power is {power}, interval from {arguments[i]} to {arguments[j]}.");
+                            }
+                            catch (Exception e)
+                            {
+                                
+                            }
+                            
                         }
                     }
                 }
