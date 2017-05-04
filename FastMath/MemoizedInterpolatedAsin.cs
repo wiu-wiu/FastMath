@@ -31,12 +31,12 @@ namespace FastMath
 
         public static MemoizedInterpolatedAsin ConstructByMaxError(float maxError)
         {
-            return ConstructByStep((float) Math.Pow(3 * maxError, 2));
+            return ConstructByStep((float)Math.Pow(3 * maxError, 2));
         }
 
         public static MemoizedInterpolatedAsin ConstructByStep(float step)
         {
-            var valuesCount = (int) (2 / step);
+            var valuesCount = (int)(2 / step) + 3;
             return new MemoizedInterpolatedAsin(valuesCount);
         }
 

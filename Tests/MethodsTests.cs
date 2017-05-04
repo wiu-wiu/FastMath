@@ -39,6 +39,16 @@ namespace Tests
                 message: $"max error is {maxError}, but actual max error is {method.MaxError()}");
         }
 
+        private static void CheckMethodStep(Func<float, IMemoizedMethod> createMethodByStep)
+        {
+            var steps = new[] {1f, 0.1f, 0.01f, 0.001f};
+            foreach (var step in steps)
+            {
+                var method = createMethodByStep(step);
+                Assert.IsTrue(Math.Abs(method.Step - step) <= 0.1f * step);
+            }
+        }
+
         [Test]
         public void TestSin()
         {
@@ -64,8 +74,7 @@ namespace Tests
         {
             var methodStep = 1e-5f;
             var method = MemoizedTan.ConstructByStep(methodStep);
-            Assert.AreEqual(methodStep, method.Step, 1e-6);
-
+            CheckMethodStep(MemoizedTan.ConstructByStep);
 
             var minArgument = method.MinArgument + 0.1f;
             var maxArgument = method.MaxArgument - 0.1f;
@@ -238,6 +247,34 @@ namespace Tests
         }
 
         [Test]
+        public void TestInterpolatedAcos()
+        {
+            var maxErrors = new[] { 1, 1e-1f, 1e-2f, 1e-3f };
+
+            foreach (var error in maxErrors)
+            {
+                var method = MemoizedInterpolatedAcos.ConstructByMaxError(error);
+                BasicChecks(method);
+                Assert.IsTrue(method.MaxError() <= error,
+                    message: $"max error is {error}, but actual error is {method.MaxError()}");
+            }
+        }
+
+        [Test]
+        public void TestInterpolatedAsin()
+        {
+            var maxErrors = new[] { 1, 1e-1f, 1e-2f, 1e-3f };
+
+            foreach (var error in maxErrors)
+            {
+                var method = MemoizedInterpolatedAsin.ConstructByMaxError(error);
+                BasicChecks(method);
+                Assert.IsTrue(method.MaxError() <= error,
+                    message: $"max error is {error}, but actual error is {method.MaxError()}");
+            }
+        }
+
+        [Test]
         public void TestTanh()
         {
             var maxErrors = new[] {1, 1e-1f, 1e-2f, 1e-3f};
@@ -310,8 +347,8 @@ namespace Tests
 
             const int minArgument = -20;
             const int maxArgument = 20;
-            var step = 0.01f;
-            var count = (int) ((maxArgument - minArgument) / step + 1);
+            const float step = 0.01f;
+            const int count = (int) ((maxArgument - minArgument) / step + 1);
 
             foreach (var error in maxErrors)
             {

@@ -36,7 +36,7 @@ namespace FastMath
 
         public static MemoizedInterpolatedAcos ConstructByStep(float step)
         {
-            var valuesCount = (int)(2 / step);
+            var valuesCount = (int)(2 / step) + 3;
             return new MemoizedInterpolatedAcos(valuesCount);
         }
 
