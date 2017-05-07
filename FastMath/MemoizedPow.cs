@@ -43,7 +43,11 @@ namespace FastMath
 
         public static MemoizedPow ConstructByStep(float minArgument, float maxArgument, float power, float step)
         {
-            var valuesCount = (int)(PI * 2 / step);
+            var valuesCount = (int)((maxArgument - minArgument) / step) + 1;
+            if (valuesCount == 1)
+            {
+                valuesCount = 2;
+            }
             return new MemoizedPow(minArgument, maxArgument, power, valuesCount);
         }
 
@@ -68,9 +72,14 @@ namespace FastMath
             else
             {
                 var arg = Min(Abs(minArgument), Abs(maxArgument));
-                step = (float) Abs(Pow(Abs(Pow(arg, power) - maxError), 1 / power) - arg) * 0.8f;
+                var partialResult = Abs(Pow(arg, power) - maxError);
+                if (partialResult < 1e-5f)
+                {
+                    partialResult += 1e-3f;
+                }
+                step = (float) Abs(Pow(partialResult, 1 / power) - arg) * 0.8f;
             }
-            return (int) Round((maxArgument - minArgument) / step);
+            return (int) Round((maxArgument - minArgument) / step) + 1;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -39,7 +39,7 @@ namespace FastMath
 
         public static MemoizedSin ConstructByStep(float step)
         {
-            var valuesCount = (int) (Math.PI * 2 / step);
+            var valuesCount = (int) (Math.PI * 2 / step) + 1;
             return new MemoizedSin(valuesCount);
         }
 

@@ -39,11 +39,6 @@ namespace FastMath
 
         public static MemoizedInterpolatedAtan ConstructByMaxError(float maxError)
         {
-            if (maxError < 1e-3)
-            {
-                throw new ArgumentException("Max error is to small. 1e-3 is the best supported quality");
-            }
-
             maxError *= 0.95f;
             var maxArgument = (float) Math.Tan(Math.PI / 2 - maxError);
             var step = (float) Math.Sqrt(8 * maxError / Max2DerivativeValue);
@@ -53,7 +48,10 @@ namespace FastMath
 
         public static MemoizedInterpolatedAtan ConstructByStep(float step)
         {
-            return ConstructByMaxError(Max2DerivativeValue * step * step / 8);
+            var maxError = (float)Math.Atan(step);
+            var maxArgument = (float)Math.Tan(Math.PI / 2 - maxError);
+            var valuesCount = (int)(2 * maxArgument / maxError + AdditionalValueCount);
+            return new MemoizedInterpolatedAtan(valuesCount, maxArgument);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -62,17 +60,7 @@ namespace FastMath
             var floatIndex = (argument - MinArgument) * _argumentMultiplier;
             var index = (int) floatIndex;
             var alpha = floatIndex - index;
-            try
-            {
-                return (1 - alpha) * Values[index] + alpha * Values[index + 1];
-            }
-            catch (Exception e)
-            {
-
-                return 0;
-                throw;
-            }
-            
+            return (1 - alpha) * Values[index] + alpha * Values[index + 1];
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

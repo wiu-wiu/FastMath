@@ -35,10 +35,6 @@ namespace FastMath
 
         public static MemoizedAtan ConstructByMaxError(float maxError)
         {
-            if (maxError < 1e-3)
-            {
-                throw new ArgumentException("Max error is to small. 1e-3 is the best supported quality");
-            }
             maxError *= 0.95f;
             var maxArgument = (float)Math.Tan(Math.PI / 2 - maxError);
             var valuesCount = (int) (2.5f * maxArgument / maxError + 2);
@@ -47,7 +43,10 @@ namespace FastMath
 
         public static MemoizedAtan ConstructByStep(float step)
         {
-            return ConstructByMaxError((float) Math.Atan(step));
+            var maxError = (float) Math.Atan(step);
+            var maxArgument = (float)Math.Tan(Math.PI / 2 - maxError);
+            var valuesCount = (int)(2 * maxArgument / maxError + 1);
+            return new MemoizedAtan(valuesCount, maxArgument);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

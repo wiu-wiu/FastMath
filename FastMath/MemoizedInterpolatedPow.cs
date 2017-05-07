@@ -44,7 +44,8 @@ namespace FastMath
         public static MemoizedInterpolatedPow ConstructByMaxError(float minArgument, float maxArgument, float power, float maxError)
         {
             var step = GetStepByMaxError(minArgument, maxArgument, power, maxError);
-            return ConstructByStep(minArgument, maxArgument, power, step);
+            var valuesCount = (int)((maxArgument - minArgument) / step) + 3;
+            return new MemoizedInterpolatedPow(minArgument, maxArgument, power, valuesCount);
         }
 
         private static float GetStepByMaxError(float minArgument, float maxArgument, float power, float maxError)

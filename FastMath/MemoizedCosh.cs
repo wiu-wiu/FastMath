@@ -37,7 +37,11 @@ namespace FastMath
 
         public static MemoizedCosh ConstructByStep(float minArgument, float maxArgument, float step)
         {
-            var valuesCount = (int)((maxArgument - minArgument) / step);
+            var valuesCount = (int)((maxArgument - minArgument) / step) + 1;
+            if (valuesCount == 1)
+            {
+                valuesCount = 2;
+            }
             return new MemoizedCosh(minArgument, maxArgument, valuesCount);
         }
 

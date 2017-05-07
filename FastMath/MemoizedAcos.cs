@@ -31,13 +31,15 @@ namespace FastMath
 
         public static MemoizedAcos ConstructByMaxError(float maxError)
         {
-            return ConstructByStep((float)(1 - Math.Sin(Math.PI / 2 - maxError)));
+            var step = 1 - Math.Sin(Math.PI / 2 - maxError);
+            step *= 0.95f;
+            var valuesCount = (int)(2 / step) + 2;
+            return new MemoizedAcos(valuesCount);
         }
 
         public static MemoizedAcos ConstructByStep(float step)
         {
-            step *= 0.95f;
-            var valuesCount = (int)(2 / step) + 2;
+            var valuesCount = (int)(2 / step) + 1;
             return new MemoizedAcos(valuesCount);
         }
 

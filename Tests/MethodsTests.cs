@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using FastMath;
 using NUnit.Framework;
 
@@ -7,8 +8,6 @@ namespace Tests
     [TestFixture]
     public class MethodsTests
     {
-        private readonly float[] _maxErrors = {1, 1e-1f, 1e-2f, 1e-3f, 1e-4f, 1e-5f};
-
         private static void BasicChecks(IMemoizedMethod method)
         {
             Assert.IsTrue(method.Values.Length > 0);
@@ -45,14 +44,17 @@ namespace Tests
             foreach (var step in steps)
             {
                 var method = createMethodByStep(step);
-                Assert.IsTrue(Math.Abs(method.Step - step) <= 0.1f * step);
+                Assert.IsTrue(Math.Abs(method.Step - step) <= 0.3f * step);
             }
         }
 
         [Test]
         public void TestSin()
         {
-            foreach (var error in _maxErrors)
+            var maxErrors = new[] {1, 1e-1f, 1e-2f, 1e-3f, 1e-4f, 1e-5f};
+            CheckMethodStep(MemoizedSin.ConstructByStep);
+
+            foreach (var error in maxErrors)
             {
                 var method = MemoizedSin.ConstructByMaxError(error);
                 TestUnboundMethod(method, 5 * error);
@@ -62,7 +64,10 @@ namespace Tests
         [Test]
         public void TestCos()
         {
-            foreach (var error in _maxErrors)
+            var maxErrors = new[] { 1, 1e-1f, 1e-2f, 1e-3f, 1e-4f, 1e-5f };
+            CheckMethodStep(MemoizedCos.ConstructByStep);
+
+            foreach (var error in maxErrors)
             {
                 var method = MemoizedCos.ConstructByMaxError(error);
                 TestUnboundMethod(method, 5 * error);
@@ -90,6 +95,7 @@ namespace Tests
         public void TestAtan()
         {
             var maxErrors = new[] {1, 1e-1f, 1e-2f, 1e-3f};
+            CheckMethodStep(MemoizedAtan.ConstructByStep);
 
             foreach (var error in maxErrors)
             {
@@ -102,6 +108,7 @@ namespace Tests
         public void TestInterpolatedAtan()
         {
             var maxErrors = new[] {1, 1e-1f, 1e-2f, 1e-3f};
+            CheckMethodStep(MemoizedInterpolatedAtan.ConstructByStep);
 
             foreach (var error in maxErrors)
             {
@@ -123,6 +130,8 @@ namespace Tests
                 {
                     foreach (var @base in bases)
                     {
+                        CheckMethodStep(e => MemoizedLog.ConstructByStep(arguments[i], arguments[j], @base, e));
+
                         foreach (var error in maxErrors)
                         {
                             var method = MemoizedLog.ConstructByMaxError(arguments[i], arguments[j], @base, error);
@@ -149,6 +158,8 @@ namespace Tests
                 {
                     foreach (var @base in bases)
                     {
+                        CheckMethodStep(e => MemoizedInterpolatedLog.ConstructByStep(arguments[i], arguments[j], @base, e));
+
                         foreach (var error in maxErrors)
                         {
                             var method = MemoizedInterpolatedLog.ConstructByMaxError(arguments[i], arguments[j], @base, error);
@@ -175,6 +186,11 @@ namespace Tests
                 {
                     foreach (var power in powers)
                     {
+                        if (arguments[j] - arguments[i] >= 1)
+                        {
+                            CheckMethodStep(e => MemoizedPow.ConstructByStep(arguments[i], arguments[j], power, e));
+                        }
+
                         foreach (var error in maxErrors)
                         {
                             if (power < 1 && arguments[i] < 0)
@@ -209,6 +225,8 @@ namespace Tests
                 {
                     foreach (var power in powers)
                     {
+                        CheckMethodStep(e => MemoizedInterpolatedPow.ConstructByStep(arguments[i], arguments[j], power, e));
+
                         foreach (var error in maxErrors)
                         {
                             if (power < 1 && arguments[i] < 0)
@@ -235,7 +253,7 @@ namespace Tests
         {
             var maxErrors = new[] {1, 1e-1f, 1e-2f, 1e-3f};
             var arguments = new[] {-5, 1e-1f, 1, 5};
-            var bases = new[] {0.2f, 2, (float) Math.E};
+            var bases = new[] {0.5f, 2, (float) Math.E};
 
             for (var i = 0; i < arguments.Length; ++i)
             {
@@ -243,6 +261,8 @@ namespace Tests
                 {
                     foreach (var @base in bases)
                     {
+                        CheckMethodStep(e => MemoizedInterpolatedExp.ConstructByStep(arguments[i], arguments[j], @base, e));
+
                         foreach (var error in maxErrors)
                         {
                             var method = MemoizedInterpolatedExp.ConstructByMaxError(arguments[i], arguments[j], @base, error);
@@ -269,6 +289,8 @@ namespace Tests
                 {
                     foreach (var @base in bases)
                     {
+                        CheckMethodStep(e => MemoizedExp.ConstructByStep(arguments[i], arguments[j], @base, e));
+
                         foreach (var error in maxErrors)
                         {
                             var method = MemoizedExp.ConstructByMaxError(arguments[i], arguments[j], @base, error);
@@ -292,6 +314,8 @@ namespace Tests
             {
                 for (var j = i + 1; j < arguments.Length; ++j)
                 {
+                    CheckMethodStep(e => MemoizedSqrt.ConstructByStep(arguments[i], arguments[j], e));
+
                     foreach (var error in maxErrors)
                     {
                         var method = MemoizedSqrt.ConstructByMaxError(arguments[i], arguments[j], error);
@@ -308,6 +332,7 @@ namespace Tests
         public void TestAsin()
         {
             var maxErrors = new[] {1, 1e-1f, 1e-2f, 1e-3f};
+            CheckMethodStep(MemoizedAsin.ConstructByStep);
 
             foreach (var error in maxErrors)
             {
@@ -322,6 +347,7 @@ namespace Tests
         public void TestAcos()
         {
             var maxErrors = new[] {1, 1e-1f, 1e-2f, 1e-3f};
+            CheckMethodStep(MemoizedAcos.ConstructByStep);
 
             foreach (var error in maxErrors)
             {
@@ -335,7 +361,9 @@ namespace Tests
         [Test]
         public void TestInterpolatedAcos()
         {
-            var maxErrors = new[] { 1, 1e-1f, 1e-2f, 1e-3f };
+            var maxErrors = new[] {1, 1e-1f, 1e-2f, 1e-3f};
+            CheckMethodStep(MemoizedInterpolatedAcos.ConstructByStep);
+
 
             foreach (var error in maxErrors)
             {
@@ -349,7 +377,8 @@ namespace Tests
         [Test]
         public void TestInterpolatedAsin()
         {
-            var maxErrors = new[] { 1, 1e-1f, 1e-2f, 1e-3f };
+            var maxErrors = new[] {1, 1e-1f, 1e-2f, 1e-3f};
+            CheckMethodStep(MemoizedInterpolatedAsin.ConstructByStep);
 
             foreach (var error in maxErrors)
             {
@@ -370,6 +399,8 @@ namespace Tests
             {
                 for (var j = i + 1; j < arguments.Length; ++j)
                 {
+                    CheckMethodStep(e => MemoizedTanh.ConstructByStep(arguments[i], arguments[j], e));
+
                     foreach (var error in maxErrors)
                     {
                         var method = MemoizedTanh.ConstructByMaxError(arguments[i], arguments[j], error);
@@ -392,9 +423,11 @@ namespace Tests
             {
                 for (var j = i + 1; j < arguments.Length; ++j)
                 {
+                    CheckMethodStep(e => MemoizedSinh.ConstructByStep(arguments[i], arguments[j], e));
+
                     foreach (var error in maxErrors)
                     {
-                        var method = MemoizedCosh.ConstructByMaxError(arguments[i], arguments[j], error);
+                        var method = MemoizedSinh.ConstructByMaxError(arguments[i], arguments[j], error);
                         BasicChecks(method);
                         Assert.IsTrue(method.MaxError() <= error,
                             message: $"max error is {error}, but actual error is {method.MaxError()}, " +
@@ -414,6 +447,11 @@ namespace Tests
             {
                 for (var j = i + 1; j < arguments.Length; ++j)
                 {
+                    if (arguments[j] - arguments[i] >= 1)
+                    {
+                        CheckMethodStep(e => MemoizedCosh.ConstructByStep(arguments[i], arguments[j], e));
+                    }
+
                     foreach (var error in maxErrors)
                     {
                         var method = MemoizedCosh.ConstructByMaxError(arguments[i], arguments[j], error);
@@ -444,7 +482,7 @@ namespace Tests
 
             void TestMethod(MemoizedAtan2 method, float error)
             {
-                for (var i = 0; i < count; ++i)
+                Parallel.For(0, count, i =>
                 {
                     var x = minArgument + i * step;
                     for (var j = 0; j < count; ++j)
@@ -457,11 +495,11 @@ namespace Tests
                         }
                         var result = method.Calculate(y, x);
                         var realResult = Math.Atan2(y, x);
-                        Assert.IsTrue(Math.Abs(realResult - result) <= error, 
+                        Assert.IsTrue(Math.Abs(realResult - result) <= error,
                             message: $"max error is {error}, but actual error is {Math.Abs(realResult - result)}, " +
                                      $"arguments are ({x}, {y}).");
                     }
-                }
+                });
             }
         }
     }
