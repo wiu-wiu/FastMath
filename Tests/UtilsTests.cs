@@ -1,4 +1,5 @@
 ﻿using FastMath;
+using FastMath.Core;
 using FastMath.Interpolated;
 using NUnit.Framework;
 

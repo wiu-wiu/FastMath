@@ -10,7 +10,7 @@ namespace FastMath.Interpolated
 
         public float MaxArgument { get; }
 
-        public bool IsLinearInterpolationEnabled => true;
+        public bool IsLinearInterpolated => true;
 
         public float Step { get; }
 

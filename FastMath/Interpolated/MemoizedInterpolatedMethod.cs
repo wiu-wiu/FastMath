@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using FastMath.Core;
 
 namespace FastMath.Interpolated
 {
@@ -9,7 +10,7 @@ namespace FastMath.Interpolated
 
         public float MaxArgument { get; }
 
-        public bool IsLinearInterpolationEnabled => true;
+        public bool IsLinearInterpolated => true;
 
         public float Step { get; }
 

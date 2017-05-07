@@ -31,16 +31,22 @@ namespace FastMath.Core
 
         public static float MaxError(this IMemoizedMethod method)
         {
-            return method.IsLinearInterpolationEnabled
+            return method.IsLinearInterpolated
                 ? InterpolatedMaxError(method)
                 : SimpleMaxError(method);
         }
 
+        /// <summary>
+        /// Caclulates error between memoized method and the original one with argument
+        /// </summary>
         public static float Error(this IMemoizedMethod method, float argument)
         {
             return Math.Abs(method.Calculate(argument) - method.BaseMethod(argument));
         }
 
+        /// <summary>
+        /// Caclulates error between unbound method and the original one with argument
+        /// </summary>
         public static float Error(this IUnboundMethod method, float argument)
         {
             return Math.Abs(method.CalculateUnbound(argument) - method.BaseMethod(argument));
