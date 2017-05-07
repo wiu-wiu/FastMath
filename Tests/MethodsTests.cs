@@ -219,19 +219,37 @@ namespace Tests
                             {
                                 continue;
                             }
-                            try
-                            {
-                                var method = MemoizedInterpolatedPow.ConstructByMaxError(arguments[i], arguments[j], power, error);
-                                BasicChecks(method);
-                                Assert.IsTrue(method.MaxError() <= error,
-                                    message: $"max error is {error}, but actual error is {method.MaxError()}," +
-                                             $"power is {power}, interval from {arguments[i]} to {arguments[j]}.");
-                            }
-                            catch (Exception e)
-                            {
-                                
-                            }
-                            
+                            var method = MemoizedInterpolatedPow.ConstructByMaxError(arguments[i], arguments[j], power, error);
+                            BasicChecks(method);
+                            Assert.IsTrue(method.MaxError() <= error,
+                                message: $"max error is {error}, but actual error is {method.MaxError()}," +
+                                         $"power is {power}, interval from {arguments[i]} to {arguments[j]}.");
+                        }
+                    }
+                }
+            }
+        }
+
+        [Test]
+        public void TestInterpolatedExp()
+        {
+            var maxErrors = new[] {1, 1e-1f, 1e-2f, 1e-3f};
+            var arguments = new[] {-5, 1e-1f, 1, 5};
+            var bases = new[] {0.2f, 2, (float) Math.E};
+
+            for (var i = 0; i < arguments.Length; ++i)
+            {
+                for (var j = i + 1; j < arguments.Length; ++j)
+                {
+                    foreach (var @base in bases)
+                    {
+                        foreach (var error in maxErrors)
+                        {
+                            var method = MemoizedInterpolatedExp.ConstructByMaxError(arguments[i], arguments[j], @base, error);
+                            BasicChecks(method);
+                            Assert.IsTrue(method.MaxError() <= error,
+                                message: $"max error is {error}, but actual error is {method.MaxError()}," +
+                                         $"base is {@base}, interval from {arguments[i]} to {arguments[j]}.");
                         }
                     }
                 }
