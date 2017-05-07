@@ -8,3 +8,8 @@ PerformanceBenchmark/bin/
 PerformanceBenchmark/obj/
 Tests/bin/
 Tests/obj/
+ClrBenchmark/bin/
+CoreBenchmark/obj/
+CoreBenchmark/bin/
+ClrBenchmark/obj/
+CoreBenchmark/BenchmarkDotNet.Artifacts/
