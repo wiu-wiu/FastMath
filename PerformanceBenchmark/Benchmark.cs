@@ -3,6 +3,7 @@ using System.Linq;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Attributes.Jobs;
 using FastMath;
+using FastMath.Interpolated;
 
 namespace PerformanceBenchmark
 {

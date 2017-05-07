@@ -1,5 +1,6 @@
 ﻿using System;
 using FastMath;
+using FastMath.Interpolated;
 
 namespace FastMathSampleApp
 {

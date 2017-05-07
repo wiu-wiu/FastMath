@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using FastMath;
+using FastMath.Core;
+using FastMath.Interpolated;
 using NUnit.Framework;
 
 namespace Tests

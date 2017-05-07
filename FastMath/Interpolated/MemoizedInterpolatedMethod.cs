@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 
-namespace FastMath
+namespace FastMath.Interpolated
 {
     public sealed class MemoizedInterpolatedMethod : IMemoizedMethod
     {

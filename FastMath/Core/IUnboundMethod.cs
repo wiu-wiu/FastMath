@@ -1,4 +1,4 @@
-﻿namespace FastMath
+﻿namespace FastMath.Core
 {
     public interface IUnboundMethod : IMemoizedMethod
     {

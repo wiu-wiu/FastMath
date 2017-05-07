@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FastMath
+namespace FastMath.Core
 {
     public interface IMemoizedMethod
     {

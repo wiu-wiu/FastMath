@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace FastMath
+namespace FastMath.Core
 {
     public static class Utils
     {
