@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
-using static System.Math;
 
-namespace FastMath
+namespace FastMath.Interpolated
 {
     public sealed class MemoizedInterpolatedPow : IMemoizedMethod
     {
@@ -18,7 +17,7 @@ namespace FastMath
 
         public float Power { get; }
 
-        public Func<float, float> BaseMethod => (x => (float)Pow(x, Power));
+        public Func<float, float> BaseMethod => (x => (float)Math.Pow(x, Power));
 
         private readonly float _argumentMultiplier;
 
@@ -52,19 +51,19 @@ namespace FastMath
         {
             float CalculateStep(float argument)
             {
-                var methodDerivative2 = (power - 1) * power * Pow(argument, power - 2);
-                return (float) Pow(Abs(8 * maxError / methodDerivative2), 0.5) * 0.9f;
+                var methodDerivative2 = (power - 1) * power * Math.Pow(argument, power - 2);
+                return (float) Math.Pow(Math.Abs(8 * maxError / methodDerivative2), 0.5) * 0.9f;
             }
 
-            if (Abs(power - 1) < MinArgumentValue)
+            if (Math.Abs(power - 1) < MinArgumentValue)
             {
                 return 1;
             }
             if (power < 0)
             {
                 if ((minArgument < 0 && 0 < maxArgument)
-                    || Abs(minArgument) < MinArgumentValue
-                    || Abs(maxArgument) < MinArgumentValue)
+                    || Math.Abs(minArgument) < MinArgumentValue
+                    || Math.Abs(maxArgument) < MinArgumentValue)
                 {
                     throw new ArgumentException("Can't calculate values count: power is less then zero and arguments interval containts zero");
                 }
@@ -73,12 +72,12 @@ namespace FastMath
             float step;
             if (power >= 2)
             {
-                var arg = Max(Abs(minArgument), Abs(maxArgument));
+                var arg = Math.Max(Math.Abs(minArgument), Math.Abs(maxArgument));
                 step = CalculateStep(arg);
             }
             else
             {
-                var arg = Min(Abs(minArgument), Abs(maxArgument));
+                var arg = Math.Min(Math.Abs(minArgument), Math.Abs(maxArgument));
                 step = CalculateStep(arg);
             }
             return step;
