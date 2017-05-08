@@ -34,7 +34,11 @@ namespace FastMath
 
         public static MemoizedInterpolatedPow ConstructByStep(float minArgument, float maxArgument, float power, float step)
         {
-            var valuesCount = (int)((maxArgument - minArgument) / step);
+            var valuesCount = (int)((maxArgument - minArgument) / step) + 1;
+            if (valuesCount == 1)
+            {
+                valuesCount = 2;
+            }
             return new MemoizedInterpolatedPow(minArgument, maxArgument, power, valuesCount);
         }
 

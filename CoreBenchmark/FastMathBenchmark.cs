@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using BenchmarkDotNet.Attributes;
 using FastMath;
@@ -13,6 +14,9 @@ namespace Benchmarks
         private float[] _args;
         private float[] _unboundArgs;
         private float[,] _argsAtan2;
+        private float[] _result;
+
+        public IReadOnlyList<float> Result => _result;
 
         private MemoizedSin _memSin;
         private MemoizedInterpolatedAtan _memInterpolatedAtan;
@@ -24,15 +28,16 @@ namespace Benchmarks
         {
             var rnd = new Random(DateTime.Now.Millisecond);
 
-            _args = Enumerable.Range(0, ArrayLength).Select(e => (float) (rnd.NextDouble() * Math.PI * 2)).ToArray();
+            _args = Enumerable.Range(0, ArrayLength).Select(e => (float)(rnd.NextDouble() * Math.PI * 2)).ToArray();
             _unboundArgs = Enumerable.Range(0, ArrayLength).Select(e => (float)(rnd.NextDouble() * Math.PI * 100 - Math.PI * 50)).ToArray();
 
             _argsAtan2 = new float[ArrayLength, 2];
+            _result = new float[ArrayLength];
 
             for (var i = 0; i < ArrayLength; ++i)
             {
-                _argsAtan2[i, 0] = (float) (rnd.NextDouble() * Math.PI * 2 - Math.PI);
-                _argsAtan2[i, 1] = (float) (rnd.NextDouble() * Math.PI * 2 - Math.PI);
+                _argsAtan2[i, 0] = (float)(rnd.NextDouble() * Math.PI * 2 - Math.PI);
+                _argsAtan2[i, 1] = (float)(rnd.NextDouble() * Math.PI * 2 - Math.PI);
             }
 
             _memSin = new MemoizedSin(10000);
@@ -44,54 +49,60 @@ namespace Benchmarks
         [Benchmark(Description = "MemoizedSin")]
         public void MemSin()
         {
-            foreach (var arg in _args)
+            for (var i = 0; i < _args.Length; i++)
             {
-                _memSin.Calculate(arg);
+                var arg = _args[i];
+                _result[i] = _memSin.Calculate(arg);
             }
         }
 
         [Benchmark(Description = "MemoizedSinUnbounded")]
         public void SinUnbounded()
         {
-            foreach (var arg in _unboundArgs)
+            for (var i = 0; i < _unboundArgs.Length; i++)
             {
-                _memSin.CalculateUnbound(arg);
+                var arg = _unboundArgs[i];
+                _result[i] = _memSin.CalculateUnbound(arg);
             }
         }
 
         [Benchmark(Description = "MemoizedAtan")]
         public void MemAtan()
         {
-            foreach (var arg in _args)
+            for (var i = 0; i < _args.Length; i++)
             {
-                _memAtan.Calculate(arg);
+                var arg = _args[i];
+                _result[i] = _memAtan.Calculate(arg);
             }
         }
 
         [Benchmark(Description = "MemoizedUnboundAtan")]
         public void MemUnboundAtan()
         {
-            foreach (var arg in _unboundArgs)
+            for (var i = 0; i < _unboundArgs.Length; i++)
             {
-                _memAtan.CalculateUnbound(arg);
+                var arg = _unboundArgs[i];
+                _result[i] = _memAtan.CalculateUnbound(arg);
             }
         }
 
         [Benchmark(Description = "MemoizedInterpolatedAtan")]
         public void MemInterpolatedAtan()
         {
-            foreach (var arg in _args)
+            for (var i = 0; i < _args.Length; i++)
             {
-                _memInterpolatedAtan.Calculate(arg);
+                var arg = _args[i];
+                _result[i] = _memInterpolatedAtan.Calculate(arg);
             }
         }
 
         [Benchmark(Description = "MemoizedInterpolatedUnboundAtan")]
         public void MemInterpolatedUnboundAtan()
         {
-            foreach (var arg in _unboundArgs)
+            for (var i = 0; i < _unboundArgs.Length; i++)
             {
-                _memInterpolatedAtan.CalculateUnbound(arg);
+                var arg = _unboundArgs[i];
+                _result[i] = _memInterpolatedAtan.CalculateUnbound(arg);
             }
         }
 
@@ -100,7 +111,7 @@ namespace Benchmarks
         {
             for (var i = 0; i < ArrayLength; ++i)
             {
-                _memAtan2.Calculate(_argsAtan2[i, 0], _argsAtan2[i, 1]);
+                _result[i] = _memAtan2.Calculate(_argsAtan2[i, 0], _argsAtan2[i, 1]);
             }
         }
     }
