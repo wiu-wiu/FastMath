@@ -2,6 +2,8 @@
 FastMath is a C# library with very fast but not very accurate (at least 1e-3 precision) System.Math methods implementations.
 It uses memoization technique to calculate methods as fast as possible.
 
+## [Nuget package](https://www.nuget.org/packages/FastMath)
+
 # Benchmarks
 In general System.Math is highly optimized, here are some benchmarks done at with my laptop and BenchmarkDotNet:
 ![System.Math benchmark](https://github.com/wiu-wiu/FastMath/blob/master/BenchmarkResults/SystemMathPerformance.png)
