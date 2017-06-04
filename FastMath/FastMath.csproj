@@ -8,13 +8,16 @@
     <Title>Fast implementation of System.Math</Title>
     <Description>FastMath is a C# library with very fast but not very accurate (at least 1e-3 precision) System.Math methods implementations. It uses memoization technique to calculate methods as fast as possible.</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>First release</PackageReleaseNotes>
+    <PackageReleaseNotes>Construct by values count method added. All constructors are now private, use one of constuct methods instead. A few bugs fixed.</PackageReleaseNotes>
     <PackageTags>System.Math</PackageTags>
     <projectUrl>https://github.com/wiu-wiu/FastMath</projectUrl>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/wiu-wiu/FastMath</PackageProjectUrl>
     <RepositoryUrl>https://github.com/wiu-wiu/FastMath</RepositoryUrl>
     <Company />
+    <Version>1.0.2</Version>
+    <AssemblyVersion>1.0.2.0</AssemblyVersion>
+    <FileVersion>1.0.2.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
