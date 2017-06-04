@@ -20,7 +20,7 @@ namespace FastMath
 
         private readonly float _argumentMultiplier;
 
-        public MemoizedAsin(int valuesCount)
+        private MemoizedAsin(int valuesCount)
         {
             MinArgument = -1;
             MaxArgument = 1;
@@ -28,6 +28,11 @@ namespace FastMath
             Step = (MaxArgument - MinArgument) / (valuesCount - 1);
             this.ProduceValuesArray();
             _argumentMultiplier = 1 / Step;
+        }
+
+        public static MemoizedAsin ConstructByValuesCount(int valuesCount)
+        {
+            return new MemoizedAsin(valuesCount + 1);
         }
 
         public static MemoizedAsin ConstructByMaxError(float maxError)

@@ -11,7 +11,7 @@ namespace Tests
         [Test]
         public void TestError()
         {
-            var method = new MemoizedMethod(x => x, minArgument: -100, maxArgument: 900, valuesCount: 1001);
+            var method = MemoizedMethod.ConstructByValuesCount(x => x, minArgument: -100, maxArgument: 900, valuesCount: 1000);
 
             Assert.AreEqual(method.Error(0), 0, 1e-5);
             Assert.AreEqual(method.Error(100), 0, 1e-5);
@@ -31,13 +31,13 @@ namespace Tests
 
             foreach (var valuesCount in valuesCounts)
             {
-                var method = new MemoizedMethod(x => x, minArgument: -100, maxArgument: 900, valuesCount: valuesCount);
+                var method = MemoizedMethod.ConstructByValuesCount(x => x, minArgument: -100, maxArgument: 900, valuesCount: valuesCount);
                 Assert.AreEqual(method.MaxError(), method.Step, 1e-3);
             }
 
             foreach (var valuesCount in valuesCounts)
             {
-                var method = new MemoizedInterpolatedMethod(x => x, minArgument: -100, maxArgument: 900, valuesCount: valuesCount);
+                var method = MemoizedInterpolatedMethod.ConstructByValuesCount(x => x, minArgument: -100, maxArgument: 900, valuesCount: valuesCount);
                 Assert.AreEqual(method.MaxError(), 0, 1e-3f);
             }
         }
@@ -49,13 +49,13 @@ namespace Tests
 
             foreach (var valuesCount in valuesCounts)
             {
-                var method = new MemoizedMethod(x => x, minArgument: -100, maxArgument: 900, valuesCount: valuesCount);
+                var method = MemoizedMethod.ConstructByValuesCount(x => x, minArgument: -100, maxArgument: 900, valuesCount: valuesCount);
                 Assert.IsTrue(method.MeanError() <= method.MaxError());
             }
 
             foreach (var valuesCount in valuesCounts)
             {
-                var method = new MemoizedInterpolatedMethod(x => x, minArgument: -100, maxArgument: 900, valuesCount: valuesCount);
+                var method = MemoizedInterpolatedMethod.ConstructByValuesCount(x => x, minArgument: -100, maxArgument: 900, valuesCount: valuesCount);
                 Assert.IsTrue(method.MeanError() <= method.MaxError());
             }
         }

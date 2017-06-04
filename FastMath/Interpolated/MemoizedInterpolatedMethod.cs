@@ -20,7 +20,7 @@ namespace FastMath.Interpolated
 
         private readonly float _argumentMultiplier;
 
-        public MemoizedInterpolatedMethod(Func<float, float> baseMethod, float minArgument, float maxArgument, int valuesCount)
+        private MemoizedInterpolatedMethod(Func<float, float> baseMethod, float minArgument, float maxArgument, int valuesCount, bool useParallelValueGeneration = true)
         {
             BaseMethod = baseMethod;
             MinArgument = minArgument;
@@ -31,14 +31,19 @@ namespace FastMath.Interpolated
             _argumentMultiplier = 1 / Step;
         }
 
-        public static MemoizedInterpolatedPow ConstructByStep(float minArgument, float maxArgument, float power, float step)
+        public static MemoizedInterpolatedMethod ConstructByValuesCount(Func<float, float> baseMethod, float minArgument, float maxArgument, int valuesCount, bool useParallelValueGeneration = true)
+        {
+            return new MemoizedInterpolatedMethod(baseMethod, minArgument, maxArgument, valuesCount + 2, useParallelValueGeneration);
+        }
+
+        public static MemoizedInterpolatedMethod ConstructByStep(Func<float, float> baseMethod, float minArgument, float maxArgument, float step, bool useParallelValueGeneration = true)
         {
             var valuesCount = (int)Math.Round((maxArgument - minArgument) / step) + 2;
             if (valuesCount == 2)
             {
                 valuesCount = 3;
             }
-            return new MemoizedInterpolatedPow(minArgument, maxArgument, power, valuesCount);
+            return new MemoizedInterpolatedMethod(baseMethod, minArgument, maxArgument, valuesCount + 2, useParallelValueGeneration);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

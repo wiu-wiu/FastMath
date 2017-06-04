@@ -20,14 +20,21 @@ namespace FastMath.Interpolated
 
         private readonly float _argumentMultiplier;
 
-        public MemoizedInterpolatedAcos(int valuesCount)
+        private const int AdditionalValueCount = 3;
+
+        private MemoizedInterpolatedAcos(int valuesCount)
         {
             MinArgument = -1;
             MaxArgument = 1;
             Values = new float[valuesCount];
-            Step = (MaxArgument - MinArgument) / (valuesCount - 2);
-            this.ProduceValuesArray(2);
+            Step = (MaxArgument - MinArgument) / (valuesCount - AdditionalValueCount);
+            this.ProduceValuesArray(AdditionalValueCount);
             _argumentMultiplier = 1 / Step;
+        }
+
+        public static MemoizedInterpolatedAcos ConstructByValuesCount(int valuesCount)
+        {
+            return new MemoizedInterpolatedAcos(valuesCount + AdditionalValueCount);
         }
 
         public static MemoizedInterpolatedAcos ConstructByMaxError(float maxError)
@@ -37,7 +44,11 @@ namespace FastMath.Interpolated
 
         public static MemoizedInterpolatedAcos ConstructByStep(float step)
         {
-            var valuesCount = (int)Math.Round(2 / step) + 3;
+            var valuesCount = (int)Math.Round(2 / step) + AdditionalValueCount;
+            if (valuesCount == AdditionalValueCount)
+            {
+                ++valuesCount;
+            }
             return new MemoizedInterpolatedAcos(valuesCount);
         }
 

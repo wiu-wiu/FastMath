@@ -24,7 +24,7 @@ namespace FastMath
 
         private const float MaxValue = (float) Math.PI / 2;
 
-        public MemoizedAtan(int valuesCount, float maxArgument)
+        private MemoizedAtan(int valuesCount, float maxArgument)
         {
             MinArgument = -maxArgument;
             MaxArgument = maxArgument;
@@ -32,6 +32,11 @@ namespace FastMath
             Step = (MaxArgument - MinArgument) / (valuesCount - 1);
             this.ProduceValuesArray();
             _argumentMultiplier = 1 / Step;
+        }
+
+        public static MemoizedAtan ConstructByValuesCount(int valuesCount, float maxArgument)
+        {
+            return new MemoizedAtan(valuesCount + 1, maxArgument);
         }
 
         public static MemoizedAtan ConstructByMaxError(float maxError)
@@ -46,7 +51,7 @@ namespace FastMath
         {
             var maxError = (float) Math.Atan(step);
             var maxArgument = (float)Math.Tan(Math.PI / 2 - maxError);
-            var valuesCount = (int)Math.Round(2 * maxArgument / maxError + 1);
+            var valuesCount = (int)Math.Round(2 * maxArgument / maxError);
             return new MemoizedAtan(valuesCount, maxArgument);
         }
 

@@ -22,15 +22,22 @@ namespace FastMath.Interpolated
 
         private readonly float _argumentMultiplier;
 
-        public MemoizedInterpolatedLog(float minArgument, float maxArgument, float @base, int valuesCount)
+        private const int AdditionalValueCount = 3;
+
+        private MemoizedInterpolatedLog(float minArgument, float maxArgument, float @base, int valuesCount)
         {
             MinArgument = minArgument;
             MaxArgument = maxArgument;
             Base = @base;
             Values = new float[valuesCount];
-            Step = (MaxArgument - MinArgument) / (valuesCount - 2);
-            this.ProduceValuesArray(2);
+            Step = (MaxArgument - MinArgument) / (valuesCount - AdditionalValueCount);
+            this.ProduceValuesArray(AdditionalValueCount);
             _argumentMultiplier = 1 / Step;
+        }
+
+        public static MemoizedInterpolatedLog ConstructByValuesCount(float minArgument, float maxArgument, float @base, int valuesCount)
+        {
+            return new MemoizedInterpolatedLog(minArgument, maxArgument, @base, valuesCount + AdditionalValueCount);
         }
 
         public static MemoizedInterpolatedLog ConstructByMaxError(float minArgument, float maxArgument, float @base, float maxError)
@@ -41,7 +48,7 @@ namespace FastMath.Interpolated
 
         public static MemoizedInterpolatedLog ConstructByStep(float minArgument, float maxArgument, float @base, float step)
         {
-            var valuesCount = (int)Math.Round((maxArgument - minArgument) / step);
+            var valuesCount = (int)Math.Round((maxArgument - minArgument) / step) + AdditionalValueCount;
             return new MemoizedInterpolatedLog(minArgument, maxArgument, @base, valuesCount);
         }
 

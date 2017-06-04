@@ -24,20 +24,31 @@ namespace FastMath.Interpolated
 
         private const float MinArgumentValue = 1e-3f;
 
-        public MemoizedInterpolatedExp(float minArgument, float maxArgument, float @base, int valuesCount)
+        private const int AdditionalValueCount = 3;
+
+        private MemoizedInterpolatedExp(float minArgument, float maxArgument, float @base, int valuesCount)
         {
             Base = @base;
             MinArgument = minArgument;
             MaxArgument = maxArgument;
             Values = new float[valuesCount];
-            Step = (MaxArgument - MinArgument) / (valuesCount - 2);
-            Utils.ProduceValuesArray(this, 2);
+            Step = (MaxArgument - MinArgument) / (valuesCount - AdditionalValueCount);
+            Utils.ProduceValuesArray(this, AdditionalValueCount);
             _argumentMultiplier = 1 / Step;
+        }
+
+        public static MemoizedInterpolatedExp ConstructByValuesCount(float minArgument, float maxArgument, float @base, int valuesCount)
+        {
+            return new MemoizedInterpolatedExp(minArgument, maxArgument, @base, valuesCount + AdditionalValueCount);
         }
 
         public static MemoizedInterpolatedExp ConstructByStep(float minArgument, float maxArgument, float @base, float step)
         {
-            var valuesCount = (int)Math.Round((maxArgument - minArgument) / step) + 3;
+            var valuesCount = (int)Math.Round((maxArgument - minArgument) / step) + AdditionalValueCount;
+            if (valuesCount == AdditionalValueCount)
+            {
+                ++valuesCount;
+            }
             return new MemoizedInterpolatedExp(minArgument, maxArgument, @base, valuesCount);
         }
 

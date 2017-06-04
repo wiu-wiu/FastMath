@@ -11,14 +11,19 @@ namespace FastMath
 
         private readonly MemoizedAtan _atan;
 
-        public MemoizedAtan2(int valuesCount, float maxArgument)
+        private MemoizedAtan2(int valuesCount, float maxArgument)
         {
-            _atan = new MemoizedAtan(valuesCount, maxArgument);
+            _atan = MemoizedAtan.ConstructByValuesCount(valuesCount, maxArgument);
         }
 
         public MemoizedAtan2(MemoizedAtan atan)
         {
             _atan = atan;
+        }
+
+        public static MemoizedAtan2 ConstructByValuesCount(int valuesCount, float maxArgument)
+        {
+            return new MemoizedAtan2(valuesCount, maxArgument);
         }
 
         public static MemoizedAtan2 ConstructByMaxError(float maxError)

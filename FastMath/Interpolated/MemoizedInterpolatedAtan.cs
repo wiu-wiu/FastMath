@@ -28,7 +28,7 @@ namespace FastMath.Interpolated
 
         private const int AdditionalValueCount = 2;
 
-        public MemoizedInterpolatedAtan(int valuesCount, float maxArgument)
+        private MemoizedInterpolatedAtan(int valuesCount, float maxArgument)
         {
             MinArgument = -maxArgument;
             MaxArgument = maxArgument;
@@ -38,12 +38,17 @@ namespace FastMath.Interpolated
             _argumentMultiplier = 1 / Step;
         }
 
+        public static MemoizedInterpolatedAtan ConstructByValuesCount(int valuesCount, float maxArgument)
+        {
+            return new MemoizedInterpolatedAtan(valuesCount + AdditionalValueCount, maxArgument);
+        }
+
         public static MemoizedInterpolatedAtan ConstructByMaxError(float maxError)
         {
             maxError *= 0.95f;
             var maxArgument = (float) Math.Tan(Math.PI / 2 - maxError);
             var step = (float) Math.Sqrt(8 * maxError / Max2DerivativeValue);
-            var valuesCount = (int) (2 * maxArgument / step + AdditionalValueCount + 1);
+            var valuesCount = (int) (2 * maxArgument / step + AdditionalValueCount + AdditionalValueCount);
             return new MemoizedInterpolatedAtan(valuesCount, maxArgument);
         }
 
@@ -52,6 +57,10 @@ namespace FastMath.Interpolated
             var maxError = (float)Math.Atan(step);
             var maxArgument = (float)Math.Tan(Math.PI / 2 - maxError);
             var valuesCount = (int)Math.Round(2 * maxArgument / maxError + AdditionalValueCount);
+            if (valuesCount == AdditionalValueCount)
+            {
+                ++valuesCount;
+            }
             return new MemoizedInterpolatedAtan(valuesCount, maxArgument);
         }
 

@@ -20,7 +20,7 @@ namespace FastMath
 
         private readonly float _argumentMultiplier;
 
-        public MemoizedSqrt(float minArgument, float maxArgument, int valuesCount)
+        private MemoizedSqrt(float minArgument, float maxArgument, int valuesCount)
         {
             MinArgument = minArgument;
             MaxArgument = maxArgument;
@@ -28,6 +28,11 @@ namespace FastMath
             Step = (MaxArgument - MinArgument) / (valuesCount - 1);
             this.ProduceValuesArray();
             _argumentMultiplier = 1 / Step;
+        }
+
+        public static MemoizedSqrt ConstructByValuesCount(float minArgument, float maxArgument, int valuesCount)
+        {
+            return new MemoizedSqrt(minArgument, maxArgument, valuesCount + 1);
         }
 
         public static MemoizedSqrt ConstructByMaxError(float minArgument, float maxArgument, float maxError)
@@ -38,7 +43,7 @@ namespace FastMath
 
         public static MemoizedSqrt ConstructByStep(float minArgument, float maxArgument, float step)
         {
-            var valuesCount = (int)Math.Round(Math.PI * 2 / step);
+            var valuesCount = (int)Math.Round((maxArgument - minArgument) / step) + 1;
             return new MemoizedSqrt(minArgument, maxArgument, valuesCount);
         }
 

@@ -22,7 +22,7 @@ namespace FastMath
 
         private readonly int _valuesCycleLength;
 
-        public MemoizedCos(int valuesCount)
+        private MemoizedCos(int valuesCount)
         {
             MinArgument = 0;
             MaxArgument = (float)(Math.PI * 2);
@@ -31,6 +31,11 @@ namespace FastMath
             this.ProduceValuesArray();
             _argumentMultiplier = 1 / Step;
             _valuesCycleLength = Values.Length - 1;
+        }
+
+        public static MemoizedCos ConstructByValuesCount(int valuesCount)
+        {
+            return new MemoizedCos(valuesCount + 1);
         }
 
         public static MemoizedCos ConstructByMaxError(float maxError)

@@ -20,7 +20,7 @@ namespace FastMath
 
         private readonly float _argumentMultiplier;
 
-        public MemoizedTanh(float minArgument, float maxArgument, int valuesCount)
+        private MemoizedTanh(float minArgument, float maxArgument, int valuesCount)
         {
             MinArgument = minArgument;
             MaxArgument = maxArgument;
@@ -28,6 +28,11 @@ namespace FastMath
             Step = (MaxArgument - MinArgument) / (valuesCount - 1);
             this.ProduceValuesArray();
             _argumentMultiplier = 1 / Step;
+        }
+
+        public static MemoizedTanh ConstructByValuesCount(float minArgument, float maxArgument, int valuesCount)
+        {
+            return new MemoizedTanh(minArgument, maxArgument, valuesCount + 1);
         }
 
         public static MemoizedTanh ConstructByMaxError(float minArgument, float maxArgument, float maxError)
@@ -38,7 +43,7 @@ namespace FastMath
 
         public static MemoizedTanh ConstructByStep(float minArgument, float maxArgument, float step)
         {
-            var valuesCount = (int)Math.Round(Math.PI * 2 / step);
+            var valuesCount = (int)Math.Round((maxArgument - minArgument) / step) + 1;
             return new MemoizedTanh(minArgument, maxArgument, valuesCount);
         }
 

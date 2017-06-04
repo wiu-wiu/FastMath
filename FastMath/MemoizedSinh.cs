@@ -20,7 +20,7 @@ namespace FastMath
 
         private readonly float _argumentMultiplier;
 
-        public MemoizedSinh(float minArgument, float maxArgument, int valuesCount)
+        private MemoizedSinh(float minArgument, float maxArgument, int valuesCount)
         {
             MinArgument = minArgument;
             MaxArgument = maxArgument;
@@ -28,6 +28,11 @@ namespace FastMath
             Step = (MaxArgument - MinArgument) / (valuesCount - 1);
             this.ProduceValuesArray();
             _argumentMultiplier = 1 / Step;
+        }
+
+        public static MemoizedSinh ConstructByValuesCount(float minArgument, float maxArgument, int valuesCount)
+        {
+            return new MemoizedSinh(minArgument, maxArgument, valuesCount + 1);
         }
 
         public static MemoizedSinh ConstructByMaxError(float minArgument, float maxArgument, float maxError)
@@ -38,7 +43,11 @@ namespace FastMath
 
         public static MemoizedSinh ConstructByStep(float minArgument, float maxArgument, float step)
         {
-            var valuesCount = (int)Math.Round((maxArgument - minArgument) / step);
+            var valuesCount = (int)Math.Round((maxArgument - minArgument) / step) + 1;
+            if (valuesCount == 1)
+            {
+                ++valuesCount;
+            }
             return new MemoizedSinh(minArgument, maxArgument, valuesCount);
         }
 

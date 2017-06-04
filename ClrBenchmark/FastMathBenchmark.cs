@@ -40,7 +40,7 @@ namespace Benchmarks
                 _argsAtan2[i, 1] = (float) (rnd.NextDouble() * Math.PI * 2 - Math.PI);
             }
 
-            _memSin = new MemoizedSin(10000);
+            _memSin = MemoizedSin.ConstructByValuesCount(10000);
             _memInterpolatedAtan = MemoizedInterpolatedAtan.ConstructByMaxError(0.01f);
             _memAtan = MemoizedAtan.ConstructByMaxError(0.01f);
             _memAtan2 = MemoizedAtan2.ConstructByMaxError(0.01f);

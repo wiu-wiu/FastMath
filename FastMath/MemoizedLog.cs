@@ -23,7 +23,7 @@ namespace FastMath
 
         private readonly float _argumentMultiplier;
 
-        public MemoizedLog(float minArgument, float maxArgument, float @base, int valuesCount)
+        private MemoizedLog(float minArgument, float maxArgument, float @base, int valuesCount)
         {
             MinArgument = minArgument;
             MaxArgument = maxArgument;
@@ -32,6 +32,11 @@ namespace FastMath
             Step = (MaxArgument - MinArgument) / (valuesCount - 1);
             this.ProduceValuesArray();
             _argumentMultiplier = 1 / Step;
+        }
+
+        public static MemoizedLog ConstructByValuesCount(float minArgument, float maxArgument, float @base, int valuesCount)
+        {
+            return new MemoizedLog(minArgument, maxArgument, @base, valuesCount + 1);
         }
 
         public static MemoizedLog ConstructByMaxError(float minArgument, float maxArgument, float @base, float maxError)
@@ -48,6 +53,10 @@ namespace FastMath
         public static MemoizedLog ConstructByStep(float minArgument, float maxArgument, float @base, float step)
         {
             var valuesCount = (int)Math.Round((maxArgument - minArgument) / step);
+            if (valuesCount == 1)
+            {
+                ++valuesCount;
+            }
             return new MemoizedLog(minArgument, maxArgument, @base, valuesCount);
         }
 

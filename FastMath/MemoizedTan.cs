@@ -22,7 +22,7 @@ namespace FastMath
 
         private readonly int _valuesCycleLength;
 
-        public MemoizedTan(int valuesCount)
+        private MemoizedTan(int valuesCount)
         {
             MinArgument = (float) -Math.PI / 2;
             MaxArgument = (float) Math.PI / 2;
@@ -33,6 +33,11 @@ namespace FastMath
             Values[Values.Length - 1] = (float)Math.Tan(Math.PI / 2);
             _argumentMultiplier = 1 / Step;
             _valuesCycleLength = Values.Length - 1;
+        }
+
+        public static MemoizedTan ConstructByValuesCount(int valuesCount)
+        {
+            return new MemoizedTan(valuesCount + 1);
         }
 
         public static MemoizedTan ConstructByStep(float step)

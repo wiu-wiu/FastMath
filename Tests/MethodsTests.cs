@@ -46,7 +46,10 @@ namespace Tests
             foreach (var step in steps)
             {
                 var method = createMethodByStep(step);
-                Assert.IsTrue(Math.Abs(method.Step - step) <= 0.3f * step);
+                if (method.MaxArgument - method.MinArgument > step)
+                {
+                    Assert.IsTrue(Math.Abs(method.Step - step) <= 0.35f * step);
+                }
             }
         }
 
@@ -79,7 +82,7 @@ namespace Tests
         [Test]
         public void TestTan()
         {
-            var methodStep = 1e-5f;
+            var methodStep = 0.5e-5f;
             var method = MemoizedTan.ConstructByStep(methodStep);
             CheckMethodStep(MemoizedTan.ConstructByStep);
 
@@ -218,7 +221,7 @@ namespace Tests
         public void TestInterpolatedPow()
         {
             var maxErrors = new[] {1, 1e-1f, 1e-2f, 1e-3f};
-            var arguments = new[] {-20, 1e-1f, 1, 5, 20};
+            var arguments = new[] {-15, 1e-1f, 1, 5, 15};
             var powers = new[] {-2, -1, 0.1f, 2, (float) Math.E};
 
             for (var i = 0; i < arguments.Length; ++i)

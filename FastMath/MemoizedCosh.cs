@@ -20,7 +20,7 @@ namespace FastMath
 
         private readonly float _argumentMultiplier;
 
-        public MemoizedCosh(float minArgument, float maxArgument, int valuesCount)
+        private MemoizedCosh(float minArgument, float maxArgument, int valuesCount)
         {
             MinArgument = minArgument;
             MaxArgument = maxArgument;
@@ -28,6 +28,11 @@ namespace FastMath
             Step = (MaxArgument - MinArgument) / (valuesCount - 1);
             this.ProduceValuesArray();
             _argumentMultiplier = 1 / Step;
+        }
+
+        public static MemoizedCosh ConstructByValuesCount(float minArgument, float maxArgument, int valuesCount)
+        {
+            return new MemoizedCosh(minArgument, maxArgument, valuesCount + 1);
         }
 
         public static MemoizedCosh ConstructByMaxError(float minArgument, float maxArgument, float maxError)

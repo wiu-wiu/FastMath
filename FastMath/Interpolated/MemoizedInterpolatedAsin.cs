@@ -20,14 +20,21 @@ namespace FastMath.Interpolated
 
         private readonly float _argumentMultiplier;
 
-        public MemoizedInterpolatedAsin(int valuesCount)
+        private const int AdditionalValueCount = 3;
+
+        private MemoizedInterpolatedAsin(int valuesCount)
         {
             MinArgument = -1;
             MaxArgument = 1;
             Values = new float[valuesCount];
-            Step = (MaxArgument - MinArgument) / (valuesCount - 2);
-            this.ProduceValuesArray(2);
+            Step = (MaxArgument - MinArgument) / (valuesCount - AdditionalValueCount);
+            this.ProduceValuesArray(AdditionalValueCount);
             _argumentMultiplier = 1 / Step;
+        }
+
+        public static MemoizedInterpolatedAsin ConstructByValuesCount(int valuesCount)
+        {
+            return new MemoizedInterpolatedAsin(valuesCount + 2);
         }
 
         public static MemoizedInterpolatedAsin ConstructByMaxError(float maxError)
@@ -37,7 +44,11 @@ namespace FastMath.Interpolated
 
         public static MemoizedInterpolatedAsin ConstructByStep(float step)
         {
-            var valuesCount = (int)Math.Round(2 / step) + 3;
+            var valuesCount = (int)Math.Round(2 / step) + AdditionalValueCount;
+            if (valuesCount == AdditionalValueCount)
+            {
+                ++valuesCount;
+            }
             return new MemoizedInterpolatedAsin(valuesCount);
         }
 

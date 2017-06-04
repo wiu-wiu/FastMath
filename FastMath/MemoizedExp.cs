@@ -25,7 +25,7 @@ namespace FastMath
 
         private const float MinArgumentValue = 1e-5f;
 
-        public MemoizedExp(float minArgument, float maxArgument, float @base, int valuesCount)
+        private MemoizedExp(float minArgument, float maxArgument, float @base, int valuesCount)
         {
             Base = @base;
             MinArgument = minArgument;
@@ -34,6 +34,11 @@ namespace FastMath
             Step = (MaxArgument - MinArgument) / (valuesCount - 1);
             this.ProduceValuesArray();
             _argumentMultiplier = 1 / Step;
+        }
+
+        public static MemoizedExp ConstructByValuesCount(float minArgument, float maxArgument, float @base, int valuesCount)
+        {
+            return new MemoizedExp(minArgument, maxArgument, @base, valuesCount + 1);
         }
 
         public static MemoizedExp ConstructByMaxError(float minArgument, float maxArgument, float @base, float maxError)
@@ -45,7 +50,7 @@ namespace FastMath
         public static MemoizedExp ConstructByStep(float minArgument, float maxArgument, float @base, float step)
         {
             var valuesCount = (int)Math.Round((maxArgument - minArgument) / step);
-            return new MemoizedExp(minArgument, maxArgument, @base, valuesCount);
+            return new MemoizedExp(minArgument, maxArgument, @base, valuesCount + 1);
         }
 
         private static int GetValuesCountByMaxError(float minArgument, float maxArgument, float @base, float maxError)

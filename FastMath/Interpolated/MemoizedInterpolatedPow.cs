@@ -24,27 +24,38 @@ namespace FastMath.Interpolated
 
         private const float MinArgumentValue = 1e-3f;
 
-        public MemoizedInterpolatedPow(float minArgument, float maxArgument, float power, int valuesCount)
+        private const int AdditionalValueCount = 3;
+
+        private MemoizedInterpolatedPow(float minArgument, float maxArgument, float power, int valuesCount)
         {
             Power = power;
             MinArgument = minArgument;
             MaxArgument = maxArgument;
             Values = new float[valuesCount];
-            Step = (MaxArgument - MinArgument) / (valuesCount - 2);
-            this.ProduceValuesArray(2);
+            Step = (MaxArgument - MinArgument) / (valuesCount - AdditionalValueCount);
+            this.ProduceValuesArray(AdditionalValueCount);
             _argumentMultiplier = 1 / Step;
+        }
+
+        public static MemoizedInterpolatedPow ConstructByValuesCount(float minArgument, float maxArgument, float power, int valuesCount)
+        {
+            return new MemoizedInterpolatedPow(minArgument, maxArgument, power, valuesCount + AdditionalValueCount);
         }
 
         public static MemoizedInterpolatedPow ConstructByStep(float minArgument, float maxArgument, float power, float step)
         {
-            var valuesCount = (int)Math.Round((maxArgument - minArgument) / step) + 2;
+            var valuesCount = (int)Math.Round((maxArgument - minArgument) / step) + AdditionalValueCount;
             return new MemoizedInterpolatedPow(minArgument, maxArgument, power, valuesCount);
         }
 
         public static MemoizedInterpolatedPow ConstructByMaxError(float minArgument, float maxArgument, float power, float maxError)
         {
             var step = GetStepByMaxError(minArgument, maxArgument, power, maxError);
-            var valuesCount = (int)((maxArgument - minArgument) / step) + 3;
+            var valuesCount = (int)((maxArgument - minArgument) / step) + AdditionalValueCount + 1;
+            if (valuesCount == AdditionalValueCount)
+            {
+                ++valuesCount;
+            }
             return new MemoizedInterpolatedPow(minArgument, maxArgument, power, valuesCount);
         }
 
@@ -53,7 +64,7 @@ namespace FastMath.Interpolated
             float CalculateStep(float argument)
             {
                 var methodDerivative2 = (power - 1) * power * Math.Pow(argument, power - 2);
-                return (float) Math.Pow(Math.Abs(8 * maxError / methodDerivative2), 0.5) * 0.9f;
+                return (float) Math.Pow(Math.Abs(8 * maxError / methodDerivative2), 0.5) * 0.8f;
             }
 
             if (Math.Abs(power - 1) < MinArgumentValue)

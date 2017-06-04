@@ -20,7 +20,7 @@ namespace FastMath
 
         private readonly float _argumentMultiplier;
 
-        public MemoizedAcos(int valuesCount)
+        private MemoizedAcos(int valuesCount)
         {
             MinArgument = -1;
             MaxArgument = 1;
@@ -28,6 +28,11 @@ namespace FastMath
             Step = (MaxArgument - MinArgument) / (valuesCount - 1);
             this.ProduceValuesArray();
             _argumentMultiplier = 1 / Step;
+        }
+
+        public static MemoizedAcos ConstructByValuesCount(int valuesCount)
+        {
+            return new MemoizedAcos(valuesCount + 1);
         }
 
         public static MemoizedAcos ConstructByMaxError(float maxError)

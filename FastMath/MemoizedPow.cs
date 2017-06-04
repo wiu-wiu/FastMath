@@ -25,7 +25,7 @@ namespace FastMath
 
         private const float MinArgumentValue = 1e-3f;
 
-        public MemoizedPow(float minArgument, float maxArgument, float power, int valuesCount)
+        private MemoizedPow(float minArgument, float maxArgument, float power, int valuesCount)
         {
             Power = power;
             MinArgument = minArgument;
@@ -36,10 +36,15 @@ namespace FastMath
             _argumentMultiplier = 1 / Step;
         }
 
+        public static MemoizedPow ConstructByValuesCount(float minArgument, float maxArgument, float power, int valuesCount)
+        {
+            return new MemoizedPow(minArgument, maxArgument, power, valuesCount + 1);
+        }
+
         public static MemoizedPow ConstructByMaxError(float minArgument, float maxArgument, float power, float maxError)
         {
             var valuesCount = GetValuesCountByMaxError(minArgument, maxArgument, power, maxError);
-            return new MemoizedPow(minArgument, maxArgument, power, valuesCount);
+            return new MemoizedPow(minArgument, maxArgument, power, valuesCount + 1);
         }
 
         public static MemoizedPow ConstructByStep(float minArgument, float maxArgument, float power, float step)
@@ -47,7 +52,7 @@ namespace FastMath
             var valuesCount = (int)Math.Round((maxArgument - minArgument) / step) + 1;
             if (valuesCount == 1)
             {
-                valuesCount = 2;
+                ++valuesCount;
             }
             return new MemoizedPow(minArgument, maxArgument, power, valuesCount);
         }
@@ -68,7 +73,7 @@ namespace FastMath
             if (power > 1)
             {
                 var arg = Max(Abs(minArgument), Abs(maxArgument));
-                step = (float) Abs(Abs(Pow(Pow(arg, power) + maxError, 1 / power)) - arg) * 0.9f;
+                step = (float) Abs(Abs(Pow(Pow(arg, power) + maxError, 1 / power)) - arg) * 0.85f;
             }
             else
             {
