@@ -5,13 +5,13 @@ namespace FastMath.Core
 {
     public static class Utils
     {
-        internal static void ProduceValuesArray(this IMemoizedMethod memoizedMethod, int additionalValues = 1)
+        internal static void ProduceValuesArray(this IMemoizedMethod memoizedMethod, int additionalValues = 1, bool useParallelProduction = true)
         {
             var minArgument = (double) memoizedMethod.MinArgument;
             var maxArgument = (double) memoizedMethod.MaxArgument;
             var step = (maxArgument - minArgument) / (memoizedMethod.Values.Length - additionalValues);
 
-            if (memoizedMethod.Values.Length < 10 * 1024 * 1024)
+            if (memoizedMethod.Values.Length < 10 * 1024 * 1024 || !useParallelProduction)
             {
                 for (var i = 0; i < memoizedMethod.Values.Length; ++i)
                 {

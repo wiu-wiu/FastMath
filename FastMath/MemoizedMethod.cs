@@ -21,14 +21,14 @@ namespace FastMath
 
         private readonly float _argumentMultiplier;
 
-        public MemoizedMethod(Func<float, float> baseMethod, float minArgument, float maxArgument, int valuesCount)
+        public MemoizedMethod(Func<float, float> baseMethod, float minArgument, float maxArgument, int valuesCount, bool useParallelValueProduction = true)
         {
             BaseMethod = baseMethod;
             MinArgument = minArgument;
             MaxArgument = maxArgument;
             Values = new float[valuesCount];
             Step = (MaxArgument - MinArgument) / (valuesCount - 1);
-            this.ProduceValuesArray();
+            this.ProduceValuesArray(1, useParallelValueProduction);
             _argumentMultiplier = 1 / Step;
         }
 
