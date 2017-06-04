@@ -37,7 +37,7 @@ namespace FastMath.Interpolated
 
         public static MemoizedInterpolatedAsin ConstructByStep(float step)
         {
-            var valuesCount = (int)(2 / step) + 3;
+            var valuesCount = (int)Math.Round(2 / step) + 3;
             return new MemoizedInterpolatedAsin(valuesCount);
         }
 

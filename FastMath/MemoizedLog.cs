@@ -47,7 +47,7 @@ namespace FastMath
 
         public static MemoizedLog ConstructByStep(float minArgument, float maxArgument, float @base, float step)
         {
-            var valuesCount = (int)((maxArgument - minArgument) / step);
+            var valuesCount = (int)Math.Round((maxArgument - minArgument) / step);
             return new MemoizedLog(minArgument, maxArgument, @base, valuesCount);
         }
 

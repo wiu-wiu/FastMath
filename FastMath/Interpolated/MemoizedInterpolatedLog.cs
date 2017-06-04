@@ -41,7 +41,7 @@ namespace FastMath.Interpolated
 
         public static MemoizedInterpolatedLog ConstructByStep(float minArgument, float maxArgument, float @base, float step)
         {
-            var valuesCount = (int)((maxArgument - minArgument) / step);
+            var valuesCount = (int)Math.Round((maxArgument - minArgument) / step);
             return new MemoizedInterpolatedLog(minArgument, maxArgument, @base, valuesCount);
         }
 

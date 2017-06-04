@@ -38,7 +38,7 @@ namespace FastMath
 
         public static MemoizedSqrt ConstructByStep(float minArgument, float maxArgument, float step)
         {
-            var valuesCount = (int)(Math.PI * 2 / step);
+            var valuesCount = (int)Math.Round(Math.PI * 2 / step);
             return new MemoizedSqrt(minArgument, maxArgument, valuesCount);
         }
 

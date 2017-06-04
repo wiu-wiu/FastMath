@@ -51,7 +51,7 @@ namespace FastMath.Interpolated
         {
             var maxError = (float)Math.Atan(step);
             var maxArgument = (float)Math.Tan(Math.PI / 2 - maxError);
-            var valuesCount = (int)(2 * maxArgument / maxError + AdditionalValueCount);
+            var valuesCount = (int)Math.Round(2 * maxArgument / maxError + AdditionalValueCount);
             return new MemoizedInterpolatedAtan(valuesCount, maxArgument);
         }
 

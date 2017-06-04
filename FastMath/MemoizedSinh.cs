@@ -38,7 +38,7 @@ namespace FastMath
 
         public static MemoizedSinh ConstructByStep(float minArgument, float maxArgument, float step)
         {
-            var valuesCount = (int) ((maxArgument - minArgument) / step);
+            var valuesCount = (int)Math.Round((maxArgument - minArgument) / step);
             return new MemoizedSinh(minArgument, maxArgument, valuesCount);
         }
 

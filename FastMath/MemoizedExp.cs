@@ -44,7 +44,7 @@ namespace FastMath
 
         public static MemoizedExp ConstructByStep(float minArgument, float maxArgument, float @base, float step)
         {
-            var valuesCount = (int)((maxArgument - minArgument) / step);
+            var valuesCount = (int)Math.Round((maxArgument - minArgument) / step);
             return new MemoizedExp(minArgument, maxArgument, @base, valuesCount);
         }
 

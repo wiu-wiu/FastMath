@@ -46,7 +46,7 @@ namespace FastMath
         {
             var maxError = (float) Math.Atan(step);
             var maxArgument = (float)Math.Tan(Math.PI / 2 - maxError);
-            var valuesCount = (int)(2 * maxArgument / maxError + 1);
+            var valuesCount = (int)Math.Round(2 * maxArgument / maxError + 1);
             return new MemoizedAtan(valuesCount, maxArgument);
         }
 

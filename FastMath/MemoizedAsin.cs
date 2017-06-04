@@ -40,7 +40,7 @@ namespace FastMath
 
         public static MemoizedAsin ConstructByStep(float step)
         {
-            var valuesCount = (int)(2 / step) + 1;
+            var valuesCount = (int)Math.Round(2 / step) + 1;
             return new MemoizedAsin(valuesCount);
         }
 
