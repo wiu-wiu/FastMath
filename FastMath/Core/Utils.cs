@@ -5,27 +5,16 @@ namespace FastMath.Core
 {
     public static class Utils
     {
-        internal static void ProduceValuesArray(this IMemoizedMethod memoizedMethod, int additionalValues = 1, bool useParallelProduction = true)
+        internal static void ProduceValuesArray(this IMemoizedMethod memoizedMethod, int additionalValues = 1)
         {
             var minArgument = (double) memoizedMethod.MinArgument;
             var maxArgument = (double) memoizedMethod.MaxArgument;
             var step = (maxArgument - minArgument) / (memoizedMethod.Values.Length - additionalValues);
 
-            if (memoizedMethod.Values.Length < 10 * 1024 * 1024 || !useParallelProduction)
+            for (var i = 0; i < memoizedMethod.Values.Length; ++i)
             {
-                for (var i = 0; i < memoizedMethod.Values.Length; ++i)
-                {
-                    var argument = i * step + minArgument;
-                    memoizedMethod.Values[i] = memoizedMethod.BaseMethod((float) argument);
-                }
-            }
-            else
-            {
-                Parallel.For(0, memoizedMethod.Values.Length, i =>
-                {
-                    var argument = i * step + minArgument;
-                    memoizedMethod.Values[i] = memoizedMethod.BaseMethod((float) argument);
-                });
+                var argument = i * step + minArgument;
+                memoizedMethod.Values[i] = memoizedMethod.BaseMethod((float)argument);
             }
         }
 

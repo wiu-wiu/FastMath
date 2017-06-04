@@ -21,30 +21,30 @@ namespace FastMath
 
         private readonly float _argumentMultiplier;
 
-        private MemoizedMethod(Func<float, float> baseMethod, float minArgument, float maxArgument, int valuesCount, bool useParallelValueGeneration = true)
+        private MemoizedMethod(Func<float, float> baseMethod, float minArgument, float maxArgument, int valuesCount)
         {
             BaseMethod = baseMethod;
             MinArgument = minArgument;
             MaxArgument = maxArgument;
             Values = new float[valuesCount];
             Step = (MaxArgument - MinArgument) / (valuesCount - 1);
-            this.ProduceValuesArray(1, useParallelValueGeneration);
+            this.ProduceValuesArray(1);
             _argumentMultiplier = 1 / Step;
         }
 
-        public static MemoizedMethod ConstructByValuesCount(Func<float, float> baseMethod, float minArgument, float maxArgument, int valuesCount, bool useParallelValueGeneration = true)
+        public static MemoizedMethod ConstructByValuesCount(Func<float, float> baseMethod, float minArgument, float maxArgument, int valuesCount)
         {
-            return new MemoizedMethod(baseMethod, minArgument, maxArgument, valuesCount + 1, useParallelValueGeneration);
+            return new MemoizedMethod(baseMethod, minArgument, maxArgument, valuesCount + 1);
         }
 
-        public static MemoizedMethod ConstructByStep(Func<float, float> baseMethod, float minArgument, float maxArgument, float step, bool useParallelValueGeneration = true)
+        public static MemoizedMethod ConstructByStep(Func<float, float> baseMethod, float minArgument, float maxArgument, float step)
         {
             var valuesCount = (int)Math.Round((maxArgument - minArgument) / step) + 1;
             if (valuesCount == 1)
             {
                 valuesCount = 2;
             }
-            return new MemoizedMethod(baseMethod, minArgument, maxArgument, valuesCount + 1, useParallelValueGeneration);
+            return new MemoizedMethod(baseMethod, minArgument, maxArgument, valuesCount + 1);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
